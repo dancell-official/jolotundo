@@ -1,7 +1,4 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
-
 interface Props {
   camp: {
     id: string;
@@ -23,8 +20,25 @@ interface Props {
 
 const { camp } = Astro.props;
 
+type GalleryMeta = Record<string, { caption: string; subtitle: string; order: number }>;
+
+// Build gallery items statically so builds never depend on node:fs or process.cwd()
+function buildCampGallery(
+  baseFolder: string,
+  metaMap: GalleryMeta,
+  defaultSubtitle: string
+): Array<{ src: string; caption: string; subtitle: string }> {
+  return Object.entries(metaMap)
+    .sort(([fileA, metaA], [fileB, metaB]) => metaA.order - metaB.order || fileA.localeCompare(fileB))
+    .map(([file, meta]) => ({
+      src: encodeURI(`${baseFolder}/${file}`),
+      caption: meta.caption || file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
+      subtitle: meta.subtitle || defaultSubtitle
+    }));
+}
+
 // Metadata map for deluxe camp images to provide curated captions & logical narrative sequence
-const deluxeMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const deluxeMetaMap: GalleryMeta = {
   "front2.avif": { caption: "Tampak Depan & Lanskap", subtitle: "Keasrian Alami Pepohonan", order: 1 },
   "1000396148.avif": { caption: "Kabin Deluxe Jolotundo", subtitle: "Unit Eksklusif & Privat", order: 2 },
   "bed.avif": { caption: "King Size Master Bed", subtitle: "Kenyamanan Istirahat Maksimal", order: 3 },
@@ -37,44 +51,8 @@ const deluxeMetaMap: Record<string, { caption: string; subtitle: string; order: 
   "toilet2.avif": { caption: "Fasilitas Kamar Mandi", subtitle: "Amenities Lengkap & Nyaman", order: 10 },
 };
 
-// Excluded images that should not appear in the gallery
-const excludedDeluxeFiles = new Set(['front.avif', 'preview.avif']);
-
-// Dynamically read ALL images from public/images/accommodations/deluxe folder
-function getDeluxeCampImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'deluxe');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => {
-        const isImage = /\.(avif|webp|jpe?g|png)$/i.test(file);
-        const isExcluded = excludedDeluxeFiles.has(file.toLowerCase());
-        return isImage && !isExcluded;
-      });
-      files.sort((a, b) => {
-        const orderA = deluxeMetaMap[a]?.order ?? 99;
-        const orderB = deluxeMetaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = deluxeMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Deluxe Camp Jolotundo"
-        };
-        return {
-          src: `/images/accommodations/deluxe/${file}`,
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading deluxe camp images:", err);
-  }
-  return [];
-}
-
 // Metadata map for river camp images
-const riverMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const riverMetaMap: GalleryMeta = {
   "front.avif": { caption: "Fasad Tenda River Camp", subtitle: "Safari Tent Eksklusif Tepi Sungai", order: 1 },
   "depan-pagi.avif": { caption: "Pagi Hari di Tepi Sungai", subtitle: "Kesejukan Udara & Kabut Pagi", order: 2 },
   "river.avif": { caption: "Panorama Aliran Sungai", subtitle: "Bebatuan Alami & Gemericik Air", order: 3 },
@@ -89,37 +67,8 @@ const riverMetaMap: Record<string, { caption: string; subtitle: string; order: n
   "river2.avif": { caption: "Keheningan Alam Wilis", subtitle: "Ketenangan Gemericik Air Pegunungan", order: 12 },
 };
 
-// Dynamically read ALL images from public/images/accommodations/rivercamp folder
-function getRiverCampImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'rivercamp');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => /\.(avif|webp|jpe?g|png)$/i.test(file));
-      files.sort((a, b) => {
-        const orderA = riverMetaMap[a]?.order ?? 99;
-        const orderB = riverMetaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = riverMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "River Camp Jolotundo"
-        };
-        return {
-          src: encodeURI(`/images/accommodations/rivercamp/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading river camp images:", err);
-  }
-  return [];
-}
-
 // Metadata map for korean glamping images
-const koreanMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const koreanMetaMap: GalleryMeta = {
   "korean1.avif": { caption: "Fasad Utama Korean Glamping", subtitle: "Desain Hangat, Estetik & Fotogenik", order: 1 },
   "tenda.avif": { caption: "Tenda Glamping Minimalis", subtitle: "Gaya Modern Scandinavian Korea", order: 2 },
   "tenda2.avif": { caption: "Tampak Depan & Kanopi", subtitle: "Area Teras Terlindung Asri", order: 3 },
@@ -127,7 +76,6 @@ const koreanMetaMap: Record<string, { caption: string; subtitle: string; order: 
   "street.avif": { caption: "Jalur Setapak Glamping", subtitle: "Akses Rapi & Nyaman Menuju Unit", order: 5 },
   "bed.avif": { caption: "Matras & Bedding Nyaman", subtitle: "Istirahat Hangat Berbalut Selimut", order: 6 },
   "kursi-bersantai.avif": { caption: "Kursi Santai Lipat Aesthetic", subtitle: "Perlengkapan Santai Outdoor", order: 7 },
-  "kursi bersantai.avif": { caption: "Kursi Santai Lipat Aesthetic", subtitle: "Perlengkapan Santai Outdoor", order: 7 },
   "tempat-bersantai.avif": { caption: "Area Piknik & Meja Santai", subtitle: "Spot Nyaman Menikmati Sore", order: 8 },
   "tempat-bersantai2.avif": { caption: "Meja BBQ & Kumpul Santai", subtitle: "Kebersamaan Pasangan & Teman", order: 9 },
   "tempat-bersantai3.avif": { caption: "Sudut Santai Bawah Pinus", subtitle: "Kesejukan Udara Lereng Wilis", order: 10 },
@@ -137,37 +85,8 @@ const koreanMetaMap: Record<string, { caption: string; subtitle: string; order: 
   "tenda4.avif": { caption: "Detail Tenda & Kanopi", subtitle: "Konstruksi Kokoh & Elegan", order: 14 },
 };
 
-// Dynamically read ALL images from public/images/accommodations/koreanglamping folder
-function getKoreanGlampingImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'koreanglamping');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => /\.(avif|webp|jpe?g|png)$/i.test(file));
-      files.sort((a, b) => {
-        const orderA = koreanMetaMap[a]?.order ?? 99;
-        const orderB = koreanMetaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = koreanMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Korean Glamping Jolotundo"
-        };
-        return {
-          src: encodeURI(`/images/accommodations/koreanglamping/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading korean glamping images:", err);
-  }
-  return [];
-}
-
 // Metadata map for superior camp images
-const superiorMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const superiorMetaMap: GalleryMeta = {
   "superior.avif": { caption: "Fasad Utama Superior Camp", subtitle: "Kabin Kayu Modern Berpendingin AC", order: 1 },
   "outside.avif": { caption: "Lanskap Luar & Fasad Depan", subtitle: "Keasrian Alami di Bawah Pinus", order: 2 },
   "teras.avif": { caption: "Teras Santai Depan Kabin", subtitle: "Balkon Menghadap Pepohonan", order: 3 },
@@ -177,44 +96,8 @@ const superiorMetaMap: Record<string, { caption: string; subtitle: string; order
   "stop-kontak.avif": { caption: "Stop Kontak & Sambungan Listrik", subtitle: "Dukungan Daya & Pengisian Gawai", order: 7 },
 };
 
-// Excluded images for superior camp
-const excludedSuperiorFiles = new Set(['outside2.avif']);
-
-// Dynamically read ALL images from public/images/accommodations/superior folder
-function getSuperiorCampImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'superior');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => {
-        const isImage = /\.(avif|webp|jpe?g|png)$/i.test(file);
-        const isExcluded = excludedSuperiorFiles.has(file.toLowerCase());
-        return isImage && !isExcluded;
-      });
-      files.sort((a, b) => {
-        const orderA = superiorMetaMap[a]?.order ?? 99;
-        const orderB = superiorMetaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = superiorMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Superior Camp Jolotundo"
-        };
-        return {
-          src: encodeURI(`/images/accommodations/superior/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading superior camp images:", err);
-  }
-  return [];
-}
-
 // Metadata map for camping ground images
-const groundMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const groundMetaMap: GalleryMeta = {
   "ground.avif": { caption: "Hamparan Berkemah Jolotundo", subtitle: "Area Terbuka Luas di Bawah Pinus", order: 1 },
   "ground2.avif": { caption: "Lanskap Tenda Berkemah", subtitle: "Nuansa Alami & Sejuk Lereng Wilis", order: 2 },
   "ground4.avif": { caption: "Kavling Mandiri Luas", subtitle: "Esensi Berkemah Murni di Alam Bebas", order: 3 },
@@ -222,37 +105,8 @@ const groundMetaMap: Record<string, { caption: string; subtitle: string; order: 
   "ground-night2.avif": { caption: "Panorama Malam Lereng Wilis", subtitle: "Ketenangan & Syahdunya Malam Hutan", order: 5 },
 };
 
-// Dynamically read ALL images from public/images/accommodations/ground folder
-function getGroundCampImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'ground');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => /\.(avif|webp|jpe?g|png)$/i.test(file));
-      files.sort((a, b) => {
-        const orderA = groundMetaMap[a]?.order ?? 99;
-        const orderB = groundMetaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = groundMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Camping Ground Jolotundo"
-        };
-        return {
-          src: encodeURI(`/images/accommodations/ground/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading ground camp images:", err);
-  }
-  return [];
-}
-
 // Metadata map for indian camp images
-const indianMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const indianMetaMap: GalleryMeta = {
   "indian1.avif": { caption: "Fasad Utama Indian Camp", subtitle: "Nuansa Etnik Unik di Hutan Pinus", order: 1 },
   "indian2.avif": { caption: "Tenda Indian & Area Kanopi", subtitle: "Petualangan Hangat di Tengah Alam", order: 2 },
   "indian3.avif": { caption: "Kesejukan Kanopi Pinus", subtitle: "Udara Bersih Pegunungan Wilis", order: 3 },
@@ -260,37 +114,8 @@ const indianMetaMap: Record<string, { caption: string; subtitle: string; order: 
   "indian5.avif": { caption: "Area Bersantai & Piknik", subtitle: "Fasilitas Lengkap Bersama Sahabat & Keluarga", order: 5 },
 };
 
-// Dynamically read ALL images from public/images/accommodations/indian folder
-function getIndianCampImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'indian');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => /\.(avif|webp|jpe?g|png)$/i.test(file));
-      files.sort((a, b) => {
-        const orderA = indianMetaMap[a]?.order ?? (parseInt(a.replace(/\D/g, ''), 10) || 99);
-        const orderB = indianMetaMap[b]?.order ?? (parseInt(b.replace(/\D/g, ''), 10) || 99);
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = indianMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Indian Camp Jolotundo"
-        };
-        return {
-          src: encodeURI(`/images/accommodations/indian/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading indian camp images:", err);
-  }
-  return [];
-}
-
 // Metadata map for pinus camp images (15 images covering regular & plus locations)
-const pinusMetaMap: Record<string, { caption: string; subtitle: string; order: number }> = {
+const pinusMetaMap: GalleryMeta = {
   "pinus1.avif": { caption: "Panggung Kayu di Bawah Pinus", subtitle: "Keteduhan Alami Hutan Pinus Bajulan", order: 1 },
   "pinus2.avif": { caption: "Tenda Panggung Elevated", subtitle: "Terbebas dari Lembap Tanah Hutan", order: 2 },
   "pinus3.avif": { caption: "Tepi Aliran Sungai Kecil", subtitle: "Sensasi Suasana Pinus Camp Plus", order: 3 },
@@ -308,42 +133,13 @@ const pinusMetaMap: Record<string, { caption: string; subtitle: string; order: n
   "pinus15.avif": { caption: "Malam Hari di Hutan Pinus", subtitle: "Ketenangan Suasana Berkemah Autentik", order: 15 },
 };
 
-// Dynamically read ALL images from public/images/accommodations/pinuscamp folder
-function getPinusCampImages(): Array<{ src: string; caption: string; subtitle: string }> {
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'accommodations', 'pinuscamp');
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(file => /\.(avif|webp|jpe?g|png)$/i.test(file));
-      files.sort((a, b) => {
-        const orderA = pinusMetaMap[a]?.order ?? (parseInt(a.replace(/\D/g, ''), 10) || 99);
-        const orderB = pinusMetaMap[b]?.order ?? (parseInt(b.replace(/\D/g, ''), 10) || 99);
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = pinusMetaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Pinus Camp Jolotundo"
-        };
-        return {
-          src: encodeURI(`/images/accommodations/pinuscamp/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading pinus camp images:", err);
-  }
-  return [];
-}
-
-const deluxeGalleryImages = getDeluxeCampImages();
-const riverGalleryImages = getRiverCampImages();
-const koreanGalleryImages = getKoreanGlampingImages();
-const superiorGalleryImages = getSuperiorCampImages();
-const groundGalleryImages = getGroundCampImages();
-const indianGalleryImages = getIndianCampImages();
-const pinusGalleryImages = getPinusCampImages();
+const deluxeGalleryImages = buildCampGallery('/images/accommodations/deluxe', deluxeMetaMap, 'Deluxe Camp Jolotundo');
+const riverGalleryImages = buildCampGallery('/images/accommodations/rivercamp', riverMetaMap, 'River Camp Jolotundo');
+const koreanGalleryImages = buildCampGallery('/images/accommodations/koreanglamping', koreanMetaMap, 'Korean Glamping Jolotundo');
+const superiorGalleryImages = buildCampGallery('/images/accommodations/superior', superiorMetaMap, 'Superior Camp Jolotundo');
+const groundGalleryImages = buildCampGallery('/images/accommodations/ground', groundMetaMap, 'Camping Ground Jolotundo');
+const indianGalleryImages = buildCampGallery('/images/accommodations/indian', indianMetaMap, 'Indian Camp Jolotundo');
+const pinusGalleryImages = buildCampGallery('/images/accommodations/pinuscamp', pinusMetaMap, 'Pinus Camp Jolotundo');
 
 // Curate diverse, photorealistic preview images tailored for this camp experience
 const campGalleries: Record<string, Array<{ src: string; caption: string; subtitle: string }>> = {
@@ -391,10 +187,10 @@ const galleryImages = (isDeluxe && deluxeGalleryImages.length > 0)
   ? pinusGalleryImages
   : (isGround && groundGalleryImages.length > 0)
   ? groundGalleryImages
-  : (campGalleries[camp.id] || [
+  : (campGalleries[camp.id]?.length ? campGalleries[camp.id] : [
       { src: camp.editorialImage || camp.image, caption: camp.name, subtitle: camp.setting },
-      { src: "/images/accommodations/deluxe-camp-new.jpg", caption: "Kabin & Tenda Kayu", subtitle: "Arsitektur Alami Pegunungan" },
-      { src: "/images/accommodations/river-camp-editorial.jpg", caption: "Aliran Sungai Alami", subtitle: "Kesejukan Air Lereng Wilis" },
+      { src: "/images/accommodations/deluxe/front2.avif", caption: "Kabin & Tenda Kayu", subtitle: "Arsitektur Alami Pegunungan" },
+      { src: "/images/accommodations/rivercamp/river1.avif", caption: "Aliran Sungai Alami", subtitle: "Kesejukan Air Lereng Wilis" },
       { src: "/images/grill/paket-grill-big.jpg", caption: "Paket Barbeque Grill", subtitle: "Pesta Panggang Daging Segar" },
       { src: "/images/upgrade/paket-c-campfire-choice.jpg", caption: "Api Unggun Malam Hari", subtitle: "Kehangatan di Tengah Dingin" }
     ]);

@@ -1,6 +1,4 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
 import siteData from '../data/siteData.json';
 
 interface Props {
@@ -18,6 +16,8 @@ interface Props {
 }
 
 const { activity } = Astro.props;
+
+type ActivityMeta = Record<string, { caption: string; subtitle: string; order: number }>;
 
 // Mapping activity ID to folder name in public/images/activities/
 const activityFolderMap: Record<string, string> = {
@@ -38,8 +38,8 @@ const activityFolderMap: Record<string, string> = {
   "outbond": "outbond"
 };
 
-// Curated metadata for each activity image
-const activityMetaMap: Record<string, Record<string, { caption: string; subtitle: string; order: number }>> = {
+// Curated metadata for each activity image (built statically without node:fs/process.cwd())
+const activityMetaMap: Record<string, ActivityMeta> = {
   atv: {
     "atv1.avif": { caption: "Aksi Lintasan Sungai", subtitle: "Sensasi Cipratan Air Alami", order: 1 },
     "atv2.avif": { caption: "Menembus Rute Bebatuan", subtitle: "Tantangan Jalur Offroad Kali", order: 2 },
@@ -98,40 +98,20 @@ const activityMetaMap: Record<string, Record<string, { caption: string; subtitle
   }
 };
 
-// Dynamically read images from folder if available
 function getActivityImages(activityId: string): Array<{ src: string; caption: string; subtitle: string }> {
   const folder = activityFolderMap[activityId];
-  if (!folder) return [];
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'activities', folder);
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(f => /\.(avif|webp|jpe?g|png)$/i.test(f));
-      const metaMap = activityMetaMap[folder] || {};
-      files.sort((a, b) => {
-        const orderA = metaMap[a]?.order ?? 99;
-        const orderB = metaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      return files.map(file => {
-        const meta = metaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Jolotundo Edupark"
-        };
-        return {
-          src: encodeURI(`/images/activities/${folder}/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading activity images:", err);
-  }
-  return [];
+  const metaMap = folder ? activityMetaMap[folder] : undefined;
+  if (!folder || !metaMap) return [];
+  return Object.entries(metaMap)
+    .sort(([fileA, metaA], [fileB, metaB]) => metaA.order - metaB.order || fileA.localeCompare(fileB))
+    .map(([file, meta]) => ({
+      src: encodeURI(`/images/activities/${folder}/${file}`),
+      caption: meta.caption || file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
+      subtitle: meta.subtitle || "Jolotundo Edupark"
+    }));
 }
 
 const dynamicImages = getActivityImages(activity.id);
-// Spa uses fallback activity.gallery until photos are provided
 const galleryImages = dynamicImages.length > 0 ? dynamicImages : (activity.gallery || []);
 
 // Destination WhatsApp Concierge

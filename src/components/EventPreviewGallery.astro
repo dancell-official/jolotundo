@@ -1,7 +1,4 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
-
 interface Props {
   venue: {
     id: string;
@@ -19,10 +16,12 @@ interface Props {
 
 const { venue } = Astro.props;
 
+type EventMeta = Record<string, { caption: string; subtitle: string; order: number }>;
+
 // Mapping venue ID to folder name in public/images/event/
 const eventFolderMap: Record<string, string> = {
-  "wedding": "prewed",
-  "wedding-outdoor": "prewed",
+  "wedding": "wedding",
+  "wedding-outdoor": "wedding",
   "prewed": "prewed",
   "aula-hall": "hall",
   "hall": "hall",
@@ -31,22 +30,25 @@ const eventFolderMap: Record<string, string> = {
   "gathering": "gathering"
 };
 
-// Curated metadata for each event image
-const eventMetaMap: Record<string, Record<string, { caption: string; subtitle: string; order: number }>> = {
-  prewed: {
-    "wedding11.avif": { caption: "Ijab Qobul & Janji Suci", subtitle: "Momen Sakral di Bawah Kanopi Pinus", order: 1 },
-    "wedding1.avif": { caption: "Lorong Masuk Rustic Alami", subtitle: "Dekorasi Kayu & Bunga Liar Lereng Wilis", order: 2 },
-    "wedding2.avif": { caption: "Prosesi Pengantin Intimate", subtitle: "Kehangatan Keluarga Tanpa Kebisingan Kota", order: 3 },
-    "wedding3.avif": { caption: "Dekorasi Floral & Kanopi", subtitle: "Sentuhan Elegan Berpadu Alami", order: 4 },
-    "wedding4.avif": { caption: "Siluet Asri Nuansa Pinus", subtitle: "Pencahayaan Alami Pegunungan ±800 MDPL", order: 5 },
-    "wedding5.avif": { caption: "Resepsi Outdoor Asri", subtitle: "Hamparan Rumput Hijau Luas Terawat", order: 6 },
-    "wedding6.avif": { caption: "Sesi Pemotretan Pengantin", subtitle: "Momen Romantis Abadi Bersama Pasangan", order: 7 },
-    "wedding7.avif": { caption: "Sudut Temaram Romantis", subtitle: "Pendar Lampu Hangat Nuansa Senja", order: 8 },
-    "wedding8.avif": { caption: "Potret Bahagia Kedua Mempelai", subtitle: "Senyum Hangat di Pelukan Alam Wilis", order: 9 },
-    "wedding9.avif": { caption: "Lorong Pepohonan Magis", subtitle: "Keanggunan Busana Berlatar Rimba", order: 10 },
-    "wedding10.avif": { caption: "Petualangan Cinta Romantis", subtitle: "Konsep Prewedding Unik & Berkesan", order: 11 },
-    "wedding12.avif": { caption: "Pesta Romantis Hutan Pinus", subtitle: "Kenangan Abadi Pernikahan Impian", order: 12 },
-  },
+const weddingMetaMap: EventMeta = {
+  "wedding11.avif": { caption: "Ijab Qobul & Janji Suci", subtitle: "Momen Sakral di Bawah Kanopi Pinus", order: 1 },
+  "wedding1.avif": { caption: "Lorong Masuk Rustic Alami", subtitle: "Dekorasi Kayu & Bunga Liar Lereng Wilis", order: 2 },
+  "wedding2.avif": { caption: "Prosesi Pengantin Intimate", subtitle: "Kehangatan Keluarga Tanpa Kebisingan Kota", order: 3 },
+  "wedding3.avif": { caption: "Dekorasi Floral & Kanopi", subtitle: "Sentuhan Elegan Berpadu Alami", order: 4 },
+  "wedding4.avif": { caption: "Siluet Asri Nuansa Pinus", subtitle: "Pencahayaan Alami Pegunungan ±800 MDPL", order: 5 },
+  "wedding5.avif": { caption: "Resepsi Outdoor Asri", subtitle: "Hamparan Rumput Hijau Luas Terawat", order: 6 },
+  "wedding6.avif": { caption: "Sesi Pemotretan Pengantin", subtitle: "Momen Romantis Abadi Bersama Pasangan", order: 7 },
+  "wedding7.avif": { caption: "Sudut Temaram Romantis", subtitle: "Pendar Lampu Hangat Nuansa Senja", order: 8 },
+  "wedding8.avif": { caption: "Potret Bahagia Kedua Mempelai", subtitle: "Senyum Hangat di Pelukan Alam Wilis", order: 9 },
+  "wedding9.avif": { caption: "Lorong Pepohonan Magis", subtitle: "Keanggunan Busana Berlatar Rimba", order: 10 },
+  "wedding10.avif": { caption: "Petualangan Cinta Romantis", subtitle: "Konsep Prewedding Unik & Berkesan", order: 11 },
+  "wedding12.avif": { caption: "Pesta Romantis Hutan Pinus", subtitle: "Kenangan Abadi Pernikahan Impian", order: 12 },
+};
+
+// Curated metadata for each event image (built statically without node:fs/process.cwd())
+const eventMetaMap: Record<string, EventMeta> = {
+  wedding: weddingMetaMap,
+  prewed: weddingMetaMap,
   hall: {
     "hall2.avif": { caption: "Fasad Glasshouse Hall Modern", subtitle: "Arsitektur Kaca 360° Menghadap Hutan Pinus", order: 1 },
     "hall1.avif": { caption: "Interior Sejuk Full AC", subtitle: "Tata Ruang Fleksibel Seminar & Rapat Kerja", order: 2 },
@@ -62,38 +64,17 @@ const eventMetaMap: Record<string, Record<string, { caption: string; subtitle: s
   }
 };
 
-// Dynamically read images from folder if available
 function getEventImages(venueId: string): Array<{ src: string; caption: string; subtitle: string }> {
   const folder = eventFolderMap[venueId];
-  if (!folder) return [];
-  try {
-    const dirPath = path.join(process.cwd(), 'public', 'images', 'event', folder);
-    if (fs.existsSync(dirPath)) {
-      const files = fs.readdirSync(dirPath).filter(f => /\.(avif|webp|jpe?g|png)$/i.test(f));
-      const metaMap = eventMetaMap[folder] || {};
-      files.sort((a, b) => {
-        const orderA = metaMap[a]?.order ?? 99;
-        const orderB = metaMap[b]?.order ?? 99;
-        return orderA - orderB || a.localeCompare(b);
-      });
-      // Route through /images/event/wedding if folder is prewed for clean URLs, or directly folder
-      const publicFolder = folder === 'prewed' ? 'wedding' : folder;
-      return files.map(file => {
-        const meta = metaMap[file] || {
-          caption: file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-          subtitle: "Jolotundo Glamping & Culture"
-        };
-        return {
-          src: encodeURI(`/images/event/${publicFolder}/${file}`),
-          caption: meta.caption,
-          subtitle: meta.subtitle
-        };
-      });
-    }
-  } catch (err) {
-    console.error("Error reading event images:", err);
-  }
-  return [];
+  const metaMap = folder ? eventMetaMap[folder] : undefined;
+  if (!folder || !metaMap) return [];
+  return Object.entries(metaMap)
+    .sort(([fileA, metaA], [fileB, metaB]) => metaA.order - metaB.order || fileA.localeCompare(fileB))
+    .map(([file, meta]) => ({
+      src: encodeURI(`/images/event/${folder}/${file}`),
+      caption: meta.caption || file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
+      subtitle: meta.subtitle || "Jolotundo Glamping & Culture"
+    }));
 }
 
 const dynamicImages = getEventImages(venue.id);

@@ -18,29 +18,29 @@
     "narrative": "Rayakan awal perjalanan baru dalam keintiman sejati. Suasana asri hutan pinus Jolotundo menghadirkan ketenangan sakral tanpa kebisingan kota, lengkap dengan akomodasi menginap eksklusif untuk mempelai dan keluarga.",
     "gallery": [
       {
-        "src": "/images/facilities/wedding-forest.jpg",
-        "caption": "Altar & Lorong Janji Suci",
-        "subtitle": "Rustic Driftwood & Pine Canopy"
+        "src": "/images/event/wedding/wedding11.avif",
+        "caption": "Ijab Qobul & Janji Suci",
+        "subtitle": "Momen Sakral di Bawah Kanopi Pinus"
       },
       {
-        "src": "/images/accommodations/korean-glamping.jpg",
-        "caption": "Free Korean Glamping Menginap",
-        "subtitle": "Akomodasi Pengantin / Keluarga"
+        "src": "/images/event/wedding/wedding1.avif",
+        "caption": "Lorong Masuk Rustic Alami",
+        "subtitle": "Dekorasi Kayu & Bunga Liar Lereng Wilis"
       },
       {
-        "src": "/images/facilities/amfiteater-bonfire.jpg",
-        "caption": "Pine Amphitheater & Evening Vows",
-        "subtitle": "Resepsi Alam Terbuka Temaram"
+        "src": "/images/event/wedding/wedding2.avif",
+        "caption": "Prosesi Pengantin Intimate",
+        "subtitle": "Kehangatan Keluarga Tanpa Kebisingan Kota"
       },
       {
-        "src": "/images/facilities/pine-resto-cafe.jpg",
-        "caption": "Pine Cafe & Catering Support",
-        "subtitle": "Layanan Jamuan & Refreshment"
+        "src": "/images/event/wedding/wedding3.avif",
+        "caption": "Dekorasi Floral & Kanopi",
+        "subtitle": "Sentuhan Elegan Berpadu Alami"
       },
       {
-        "src": "/images/facilities/musholla-alam.jpg",
-        "caption": "Musholla & Kesejukan Alam",
-        "subtitle": "Fasilitas Ibadah Asri Lereng Wilis"
+        "src": "/images/event/wedding/wedding5.avif",
+        "caption": "Resepsi Outdoor Asri",
+        "subtitle": "Hamparan Rumput Hijau Luas Terawat"
       }
     ],
     "specs": [
@@ -139,29 +139,24 @@
     "narrative": "Gedung pertemuan serbaguna berdinding kaca modern yang memadukan hawa sejuk pegunungan dan kenyamanan ruangan full AC. Dirancang khusus untuk rapat kerja dinas, seminar, workshop, hingga ramah tamah komunitas.",
     "gallery": [
       {
-        "src": "/images/facilities/glass-hall-venue.jpg",
-        "caption": "Glasshouse Pavilion Panoramik",
-        "subtitle": "Dinding Kaca 360° Pemandangan Pinus"
+        "src": "/images/event/hall/hall2.avif",
+        "caption": "Fasad Glasshouse Hall Modern",
+        "subtitle": "Arsitektur Kaca 360° Menghadap Hutan Pinus"
       },
       {
-        "src": "/images/facilities/meeting-hall-pendopo.jpg",
-        "caption": "Ruang Pertemuan Full AC",
-        "subtitle": "Kenyamanan Sejuk Tanpa Polusi"
+        "src": "/images/event/hall/hall1.avif",
+        "caption": "Interior Sejuk Full AC",
+        "subtitle": "Tata Ruang Fleksibel Seminar & Rapat Kerja"
       },
       {
-        "src": "/images/facilities/event-hero.jpg",
-        "caption": "Pencahayaan Megah Saat Senja",
-        "subtitle": "Suasana Temaram Hangat & Khidmat"
+        "src": "/images/event/hall/hall3.avif",
+        "caption": "Suasana Hangat Rapat Dinas",
+        "subtitle": "Kapasitas 60–120 Tamu Nyaman & Privat"
       },
       {
-        "src": "/images/facilities/wifi-access.jpg",
-        "caption": "Konektivitas Audio Visual",
-        "subtitle": "High-Speed Internet & Presentasi 4K"
-      },
-      {
-        "src": "/images/facilities/parking-area.jpg",
-        "caption": "Aksesibilitas & Area Parkir Luas",
-        "subtitle": "Kapasitas Rombongan Bus & Puluhan Mobil"
+        "src": "/images/event/hall/hall4.avif",
+        "caption": "Panorama 360° Sudut Kaca",
+        "subtitle": "Ketenangan Alami Pendorong Ide Strategis"
       }
     ],
     "specs": [
@@ -245,29 +240,29 @@
     "narrative": "Area rumput terbuka luas berlatar pohon pinus dan kabut alami lereng Wilis. Sangat ideal untuk gathering keluarga besar, reuni akbar, jambore komunitas, hingga program outbound team building korporat.",
     "gallery": [
       {
-        "src": "/images/activities/outbound-gathering.jpg",
-        "caption": "Hamparan Lapangan Rumput Pinus",
-        "subtitle": "Area Terbuka Sinergi & Dinamika Tim"
+        "src": "/images/event/gathering/gathering2.avif",
+        "caption": "Keseruan Dinamika Outbound",
+        "subtitle": "Membangun Kekompakan & Sinergi Tim"
       },
       {
-        "src": "/images/facilities/amfiteater-bonfire.jpg",
-        "caption": "Malam Keakraban Api Unggun",
-        "subtitle": "Sesi Refleksi & Bonfire Gathering"
+        "src": "/images/event/gathering/gathering1.avif",
+        "caption": "Ice Breaking & Fun Games",
+        "subtitle": "Tawa Ceria & Mencairkan Batas Tim"
       },
       {
-        "src": "/images/activities/atv-adventure.jpg",
-        "caption": "Fun Adventure ATV Add-on",
-        "subtitle": "Aktivitas Seru Melintasi Sungai & Hutan"
+        "src": "/images/event/gathering/gathering3.avif",
+        "caption": "Arena Lapangan Pinus Luas",
+        "subtitle": "Hamparan Rumput Hijau Terawat Kapasitas Besar"
       },
       {
-        "src": "/images/facilities/pine-resto-cafe.jpg",
-        "caption": "Catering & Pine Cafe Resto",
-        "subtitle": "Santap Siang & Coffee Break Rombongan"
+        "src": "/images/event/gathering/gathering4.avif",
+        "caption": "Yel-Yel & Semangat Kebersamaan",
+        "subtitle": "Energi Positif Dipandu Trainer Profesional"
       },
       {
-        "src": "/images/activities/jeep-offroad.jpg",
-        "caption": "Ekspedisi Fun Offroad 4x4",
-        "subtitle": "Jelajah Jalur Ngleyangan & Lereng Wilis"
+        "src": "/images/event/gathering/gathering5.avif",
+        "caption": "Foto Bersama Rombongan",
+        "subtitle": "Kenangan Berkesan Komunitas & Korporat"
       }
     ],
     "specs": [

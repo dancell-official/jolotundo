@@ -20,11 +20,11 @@
       { "label": "SAFETY", "value": "Helm & Guide" }
     ],
     "gallery": [
-      { "src": "/images/activities/atv-adventure.jpg", "caption": "Lintasan Sungai Berbatu", "subtitle": "Sensasi Cipratan Air Alami Lereng Wilis" },
-      { "src": "/images/upgrade/paket-a-atv-comfort.jpg", "caption": "Jalur Kanopi Pinus", "subtitle": "Track Tanah Basah Berkelok di Hutan" },
-      { "src": "/images/activities/wahana-hero.jpg", "caption": "Suasana Senja Wilis", "subtitle": "Kabut Dingin & Panorama Lembah ±800 MDPL" },
-      { "src": "/images/activities/jeep-offroad.jpg", "caption": "Tantangan Offroad Alami", "subtitle": "Tanjakan Terjal & Rute Bebatuan" },
-      { "src": "/images/upgrade/paket-d-ultimate-adventure.jpg", "caption": "Eksplorasi Tak Terlupakan", "subtitle": "Petualangan Bersama Teman & Keluarga" }
+      { "src": "/images/activities/atv/atv1.avif", "caption": "Aksi Lintasan Sungai", "subtitle": "Sensasi Cipratan Air Alami" },
+      { "src": "/images/activities/atv/atv2.avif", "caption": "Menembus Rute Bebatuan", "subtitle": "Tantangan Jalur Offroad Kali" },
+      { "src": "/images/activities/atv/atv3.avif", "caption": "Konvoi Jalur Pinus", "subtitle": "Manuver di Bawah Naungan Pohon" },
+      { "src": "/images/activities/atv/atv4.avif", "caption": "Adrenalin Quad Bike", "subtitle": "Kendali Penuh di Medan Menantang" },
+      { "src": "/images/activities/atv/atv5.avif", "caption": "Tanjakan Tanah Basah", "subtitle": "Torsi Kuat Mesin ATV Prima" }
     ],
     "packageSection": {
       "kicker": "THE PACKAGES",
@@ -94,11 +94,11 @@
       { "label": "SAFETY", "value": "Driver Pro & Rollbar" }
     ],
     "gallery": [
-      { "src": "/images/activities/jeep-offroad.jpg", "caption": "Jeep 4x4 Mountain Trail", "subtitle": "Tanjakan Terjal dan Bebatuan Cadas" },
-      { "src": "/images/activities/wahana-hero.jpg", "caption": "Panorama Pegunungan Wilis", "subtitle": "Hawa Sejuk & Hutan Pinus Asri" },
-      { "src": "/images/activities/atv-adventure.jpg", "caption": "Menembus Sungai Alami", "subtitle": "Sensasi Petualangan Air dan Tanah" },
-      { "src": "/images/accommodations/river-camp-editorial.jpg", "caption": "Kesejukan Lembah Bajulan", "subtitle": "Kawasan Hijau Alami Tanpa Polusi" },
-      { "src": "/images/accommodations/deluxe-camp-new.jpg", "caption": "Pangkalan Wisata Jolotundo", "subtitle": "Titik Kumpul & Rest Area Nyaman" }
+      { "src": "/images/activities/jeep/jeep4.avif", "caption": "Aksi 4x4 Offroad Ekstrem", "subtitle": "Menembus Rute Bebatuan Cadas" },
+      { "src": "/images/activities/jeep/jeep.avif", "caption": "Armada 4x4 Tangguh", "subtitle": "Mobil Overland Berpenggerak Ganda" },
+      { "src": "/images/activities/jeep/jeep1.avif", "caption": "Tanjakan Terjal Lereng", "subtitle": "Skill Driver Berpengalaman" },
+      { "src": "/images/activities/jeep/jeep3.avif", "caption": "Ekspedisi Rimba Wilis", "subtitle": "Kawasan Alami Hutan Tropis" },
+      { "src": "/images/activities/jeep/jeep5.avif", "caption": "Lintas Batuan Purba", "subtitle": "Sensasi Goyangan Offroad Asli" }
     ],
     "packageSection": {
       "kicker": "THE PACKAGES",
@@ -161,11 +161,11 @@
       { "label": "SAFETY", "value": "Pawang & Helm" }
     ],
     "gallery": [
-      { "src": "/images/activities/horse-riding.jpg", "caption": "Kuda Jinak & Terlatih", "subtitle": "Aman untuk Pemula Maupun Anak-Anak" },
-      { "src": "/images/upgrade/paket-d-ultimate-adventure.jpg", "caption": "Menunggang di Tengah Hutan Pinus", "subtitle": "Ketenangan Alami di Bawah Naungan Pohon" },
-      { "src": "/images/activities/wahana-hero.jpg", "caption": "Lanskap Pegunungan Indah", "subtitle": "Udara Dingin & Bersih Bebas Polusi" },
-      { "src": "/images/accommodations/pinus-camp-plus-new.jpg", "caption": "Arena Wisata Terbuka", "subtitle": "Area Asri Bersama Keluarga" },
-      { "src": "/images/facilities/amfiteater-bonfire.jpg", "caption": "Kawasan Nyaman Jolotundo", "subtitle": "Fasilitas Wisata Terintegrasi Lengkap" }
+      { "src": "/images/activities/horse/horse1.avif", "caption": "Tunggang Kuda Lereng Wilis", "subtitle": "Pengalaman Berkuda di Alam Asri" },
+      { "src": "/images/activities/horse/horse2.avif", "caption": "Jalur Teduh Kanopi Pinus", "subtitle": "Langkah Santai Menikmati Udara Sejuk" },
+      { "src": "/images/activities/horse/horse3.avif", "caption": "Pawang Pendamping Berpengalaman", "subtitle": "Keamanan & Kenyamanan Terjamin" },
+      { "src": "/images/activities/horse/horse4.avif", "caption": "Ketenangan Semilir Angin", "subtitle": "Aktivitas Menenangkan & Meditatif" },
+      { "src": "/images/activities/horse/horse5.avif", "caption": "Wisata Ramah Keluarga", "subtitle": "Cocok untuk Anak & Pemula" }
     ],
     "packageSection": {
       "kicker": "THE PACKAGES",
@@ -376,11 +376,11 @@
       { "label": "FASILITAS", "value": "9 Include Komplit" }
     ],
     "gallery": [
-      { "src": "/images/activities/outbound-gathering.jpg", "caption": "Keseruan Ice Breaking", "subtitle": "Membangun Tawa, Kekompakan dan Keakraban Tim" },
-      { "src": "/images/facilities/amfiteater-bonfire.jpg", "caption": "Amfiteater Api Unggun", "subtitle": "Sesi Evaluasi dan Refleksi Malam Hari" },
-      { "src": "/images/facilities/meeting-hall-pendopo.jpg", "caption": "Pendopo & Hall Serbaguna", "subtitle": "Area Indoor Nyaman untuk Acara Formal" },
-      { "src": "/images/activities/wahana-hero.jpg", "caption": "Lapangan Hijau Luas", "subtitle": "Udara Segar Gunung Wilis Menambah Energi" },
-      { "src": "/images/facilities/pine-resto-cafe.jpg", "caption": "Layanan Katering Prasmanan", "subtitle": "Sajian Kuliner Lezat Khas Pegunungan" }
+      { "src": "/images/activities/outbond/outbond1.avif", "caption": "Sinergi & Team Building", "subtitle": "Membangun Kekompakan Kelompok" },
+      { "src": "/images/activities/outbond/outbond2.avif", "caption": "Dinamika Kelompok & Fun Games", "subtitle": "Tawa & Semangat Kolaborasi" },
+      { "src": "/images/activities/outbond/outbond3.avif", "caption": "Arena Lapangan Pinus Luas", "subtitle": "Kapasitas Ratusan Peserta" },
+      { "src": "/images/activities/outbond/outbond4.avif", "caption": "Aktivitas Luar Ruang Terbuka", "subtitle": "Udara Bersih Pegunungan Wilis" },
+      { "src": "/images/activities/outbond/outbond5.avif", "caption": "Tantangan Kerjasama Regu", "subtitle": "Fasilitator & Trainer Profesional" }
     ],
     "packageSection": {
       "kicker": "THE PACKAGES",
