@@ -74,8 +74,8 @@
     "capacity": "3 s/d 6 Orang",
     "setting": "Pine Lawn Garden",
     "elevation": "±800 MDPL",
-    "priceWeekday": "Mulai Rp 600.000",
-    "priceWeekend": "Mulai Rp 900.000",
+    "priceWeekday": "Rp 600.000 (3 Org) / Rp 900.000 (6 Org)",
+    "priceWeekend": "Rp 600.000 (3 Org) / Rp 900.000 (6 Org)",
     "priceRawWeekday": 600000,
     "priceRawWeekend": 900000,
     "checkIn": "14.00 WIB",
@@ -83,8 +83,25 @@
     "image": "/images/accommodations/koreanglamping/korean1.avif",
     "editorialImage": "/images/accommodations/koreanglamping/korean1.avif",
     "editorialTagline": "Kehangatan memanggang daging BBQ di bawah kerlap-kerlip lampu senja di tengah sejuknya kabut Gunung Wilis.",
-    "pills": ["Lembah Pinus", "BBQ Picnic", "Aesthetic Tent", "Maks 6 Tamu"],
+    "pills": ["Lembah Pinus", "Kapasitas 3 & 6 Pax", "Mulai Rp 600K", "BBQ & Cooking Set"],
     "featured": true,
+    "pricingType": "capacity",
+    "pricingTiers": [
+      {
+        "name": "Kapasitas 3 Orang",
+        "price": "Rp 600.000",
+        "period": "/ malam",
+        "badge": "3 Orang",
+        "description": "Tenda estetis ala Korea lengkap dengan matras, selimut hangat, kompor set & alat panggang BBQ."
+      },
+      {
+        "name": "Kapasitas 6 Orang",
+        "price": "Rp 900.000",
+        "period": "/ malam",
+        "badge": "6 Orang",
+        "description": "Tenda ala Korea luas dengan perlengkapan berkemah lengkap untuk keluarga atau kelompok sahabat."
+      }
+    ],
     "facilities": [
       "Matras, sprei, bantal & selimut",
       "Kompor, cooking set & kettle",

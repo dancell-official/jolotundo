@@ -122,21 +122,16 @@
         },
         {
           "label": "FREE INKLUSI",
-          "value": "Snack Box & Welcome Drink",
-          "desc": "Camilan dan minuman penyegar gratis disediakan untuk seluruh rombongan selama ekspedisi jelajah."
-        },
-        {
-          "label": "RESERVASI",
-          "value": "Pemesanan Minimal H-1",
-          "desc": "Dianjurkan melakukan konfirmasi minimal 1 hari sebelumnya untuk penyiapan armada dan penjadwalan driver."
+          "value": "Snack & Welcome Drink",
+          "desc": "Snack dan welcome drink penyegar disediakan untuk seluruh rombongan selama ekspedisi jelajah."
         }
       ]
     },
     "inclusions": [
       { "title": "1 Unit Mobil Jeep 4x4 Terawat", "desc": "Armada 4WD tangguh dengan roll-bar pelindung keselamatan penuh." },
       { "title": "Driver Berpengalaman & Bersertifikat", "desc": "Pengemudi ahli medan ekstrem lereng Wilis yang ramah dan sigap." },
-      { "title": "Free Snack Box & Welcome Drink", "desc": "Camilan dan minuman penyegar selama ekspedisi (khusus Paket Fun Offroad)." },
-      { "title": "Kunjungan Spot Air Terjun & View Bandara", "desc": "Pemberhentian foto di lanskap indah Air Terjun Ngleyangan & Bandara Dhoho." },
+      { "title": "Free Snack & Welcome Drink", "desc": "Snack dan welcome drink penyegar selama ekspedisi jelajah." },
+      { "title": "Kunjungan spot gerbang pintu masuk air terjun & view bandara dhoho", "desc": "Pemberhentian foto dan eksplorasi di spot gerbang pintu masuk air terjun serta pemandangan panorama view Bandara Dhoho Kediri." },
       { "title": "Bahan Bakar & Tiket Lintasan", "desc": "Biaya operasional perjalanan sudah tercakup penuh tanpa biaya tersembunyi." }
     ],
     "rules": [
@@ -319,7 +314,7 @@
       { "src": "/images/activities/zoo/zoo-kandang3.avif", "caption": "Koridor Kandang & Area Satwa", "subtitle": "Lingkungan Bersih, Sejuk & Ramah Anak" }
     ],
     "packageSection": {
-      "kicker": "TIKET & PAKET EDUKASI",
+      "kicker": "TIKET & JAM OPERASIONAL",
       "headline": "Belajar mencintai alam dan satwa secara langsung.",
       "narrative": "Akses terbuka bagi anak-anak dan keluarga untuk berinteraksi, membelai, dan memberi makan aneka satwa jinak dengan pendampingan edukator ramah.",
       "rows": [
@@ -335,15 +330,9 @@
           "desc": "Pilihan pakan higienis (wortel segar untuk kelinci/rusa atau biji-bijian bernutrisi untuk unggas dan burung aviary)."
         },
         {
-          "label": "PAKET EDUKASI SEKOLAH / TK",
-          "value": "Rp 35.000 / anak",
-          "badge": "FAVORIT STUDY TOUR",
-          "desc": "Minimal 25 siswa. Kunjungan reguler gratis; paket khusus rombongan mencakup pakan satwa, edukator pemandu materi zoologi dasar, worksheet edukasi, dan free pendamping guru."
-        },
-        {
           "label": "JAM OPERASIONAL",
-          "value": "08.00 — 17.00 WIB",
-          "desc": "Buka setiap hari (Weekday & Weekend). Waktu pemberian pakan satwa terbaik di pagi hari (08.30 - 10.30) dan sore hari (14.30 - 16.30)."
+          "value": "09.00 — 16.00 WIB",
+          "desc": "Buka setiap hari jam 09.00 - 16.00 WIB. Pengunjung dan keluarga dapat berinteraksi langsung serta memberi pakan aneka satwa jinak."
         },
         {
           "label": "PENDAMPING & KEBERSIHAN",

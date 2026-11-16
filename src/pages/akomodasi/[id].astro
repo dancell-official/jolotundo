@@ -35,6 +35,7 @@ const { camp, prevCamp, nextCamp } = Astro.props;
 // Flag specific accommodation types for tailored presentation
 const isPinus = camp.id === 'pinus-camp' || camp.id === 'pinus-camp-plus';
 const isIndian = camp.id === 'indian-camp';
+const isKorean = camp.id === 'korean-glamping';
 
 // Determine best background image for the hero
 const heroImage = camp.editorialImage || camp.image;
@@ -318,7 +319,7 @@ const breadcrumbSchema = {
                   *Fasilitas & benefit keduanya identik, perbedaan terletak pada lokasi tepi aliran sungai.
                 </span>
               </div>
-            ) : isIndian ? (
+            ) : (isIndian || isKorean) ? (
               <div class="flex flex-col gap-4 py-5 border-b border-white/15">
                 <!-- Option 1: Kapasitas 3 Orang -->
                 <div class="p-3.5 bg-white/[0.04] border border-white/10 flex flex-col gap-2">
@@ -381,11 +382,7 @@ const breadcrumbSchema = {
 
             <!-- Perks Summary -->
             <ul class="flex flex-col gap-2 py-4 text-xs font-mono-tag text-white/75">
-              <li class="flex items-center gap-2">
-                <span class="text-emerald-400">✓</span>
-                <span>Termasuk tiket masuk wisata & parkir kendaraan</span>
-              </li>
-              {isIndian ? (
+              {isIndian || isKorean ? (
                 <>
                   <li class="flex items-center gap-2">
                     <span class="text-emerald-400">✓</span>
@@ -427,8 +424,8 @@ const breadcrumbSchema = {
               href={`https://wa.me/${siteData.brand.whatsapp}?text=${encodeURIComponent(
                 isPinus
                   ? `Halo Admin Jolotundo, saya ingin konsultasi ketersediaan dan reservasi *Pinus Camp / Pinus Camp Plus*.`
-                  : isIndian
-                  ? `Halo Admin Jolotundo, saya ingin konsultasi ketersediaan dan reservasi *Indian Camp* (Kapasitas 3 / 6 Orang).`
+                  : (isIndian || isKorean)
+                  ? `Halo Admin Jolotundo, saya ingin konsultasi ketersediaan dan reservasi *${camp.name}* (Kapasitas 3 / 6 Orang).`
                   : `Halo Admin Jolotundo, saya ingin konsultasi ketersediaan dan reservasi *${camp.name}*.`
               )}`}
               target="_blank"
