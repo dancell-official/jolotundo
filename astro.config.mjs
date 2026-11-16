@@ -7,9 +7,10 @@ import react from '@astrojs/react';
 
 const siteUrl =
   process.env.SITE_URL ||
+  process.env.CF_PAGES_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'https://jolotundo.vercel.app');
+    : 'https://jolotundo.pages.dev');
 
 // https://astro.build/config
 export default defineConfig({
