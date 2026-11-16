@@ -6,42 +6,42 @@ import siteData from '../../data/siteData.json';
 
 // WhatsApp Order / Reservation URL
 const waPhone = siteData.brand.whatsapp || "6282249828998";
-const waUrl = `https://wa.me/${waPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Halo Admin Jolotundo, saya ingin memesan menu Warung Ketan / Kopi di Jolotundo Cafe.")}`;
+const waUrl = `https://wa.me/${waPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Halo Admin Jolotundo, saya ingin memesan meja / menu di Jolotundo Cafe.")}`;
 
 // Split kata untuk efek Scroll-Driven Word Reveal (1:1 GoUncharted Architecture)
-const placeHeadline = "Aroma ketan hangat, seduhan kopi lereng Wilis, dan teduhnya bayang kanopi pinus yang memeluk senja.".split(" ");
+const placeHeadline = "Racikan kopi hangat, sajian kuliner favorit, dan area duduk open-air di bawah rindang hutan pinus.".split(" ");
 
 // GoUncharted Hairline Metadata Table Rows (1:1 with Reference Design)
 const placeTableRows = [
   {
     label: "SETTING",
-    title: "Pine Forest Wooden Chalet",
-    desc: "Pondok paviliun kayu pinus alami dengan area indoor hangat dan alfresco deck di bawah naungan pohon pinus."
+    title: "Open-Air Pine Forest Cafe",
+    desc: "Bar kopi semi-outdoor beratap kaca, area duduk tenda kanopi teduh, dan barisan meja kayu terbuka langsung di bawah pohon pinus."
   },
   {
     label: "KAPASITAS",
     title: "200 Kursi Tamu",
-    desc: "Kombinasi bangku kayu solid, meja keluarga santai, dan area lesehan yang ramah anak serta nyaman untuk rombongan."
+    desc: "Kombinasi meja bar tinggi menghadap lembah pinus, meja piknik kayu keluarga, dan area duduk kanopi yang nyaman untuk rombongan."
   },
   {
     label: "JAM BUKA",
     title: "07.00 — 22.00 WIB",
-    desc: "Buka setiap hari melayani sarapan pagi sejuk berkabut, santap siang santai, hingga nongkrong malam syahdu."
+    desc: "Buka setiap hari melayani sarapan pagi sejuk berkabut, santap siang keluarga, hingga nongkrong santai di malam hari."
   },
   {
     label: "SUASANA",
     title: "Sejuk Pegunungan (18°–22°C)",
-    desc: "Udara murni pegunungan dengan aroma pinus alami dan pencahayaan warm ambient lembut saat petang tiba."
+    desc: "Udara murni pegunungan di bawah rindang kanopi pepohonan dengan pendar lampu gantung hangat saat senja tiba."
   },
   {
     label: "MENU UTAMA",
-    title: "Warung Ketan, Bakso & Kopi",
-    desc: "Ketan kelapa kedelai otentik, ketan durian lumer, bakso sapi kuah rempah, mie pedas, aneka Chinese snack & specialty coffee."
+    title: "Kopi, Hidangan Hangat & Snack",
+    desc: "Racikan kopi & latte, ayam & nasi, bakso & mie hangat, Nusantara & Chinese snack, aneka bapao, dessert, hingga minuman anak."
   },
   {
     label: "PEMESANAN",
     title: "Scan QR Meja & Kasir",
-    desc: "Pemesanan mandiri cepat dan praktis via scan QR di masing-masing meja atau langsung melalui kasir sentral."
+    desc: "Pemesanan mandiri cepat dan praktis via scan QR di masing-masing meja atau langsung melalui kasir bar utama."
   },
   {
     label: "PEMBAYARAN",
@@ -54,23 +54,23 @@ const placeTableRows = [
 const cafeGalleryImages = [
   {
     src: "/images/resto/jolocafe/jolo1.avif",
-    caption: "Pondok Chalet Kayu & Warung Ketan",
-    subtitle: "PONDOK KAYU HANGAT DI BAWAH KANOPI PINUS"
+    caption: "Barista Counter & Coffee Bar",
+    subtitle: "BAR KOPI SEMI-OUTDOOR BERATAP KACA DI TENGAH PINUS"
   },
   {
     src: "/images/resto/jolocafe/jolo2.avif",
-    caption: "Ketan Tradisional & Kopi Hangat",
-    subtitle: "PULEN HANGAT DENGAN TABURAN KELAPA & KEDELAI"
+    caption: "Pine View Bar Seating",
+    subtitle: "DERETAN KURSI BAR MENGHADAP LEMBAH & TENDA PINUS"
   },
   {
     src: "/images/resto/jolocafe/jolo3.avif",
-    caption: "Area Duduk Alfresco Asri",
-    subtitle: "TEMPAT BERSANTAI TEDUH DENGAN UDARA SEGAR"
+    caption: "Area Duduk Kanopi Teduh",
+    subtitle: "SANTAI NYAMAN DI BAWAH KANOPI OUTDOOR YANG SEJUK"
   },
   {
     src: "/images/resto/jolocafe/jolo4.avif",
-    caption: "Kehangatan Nongkrong & Kuliner",
-    subtitle: "SAJIAN KHAS PEGUNUNGAN & BAKSO REMPAH"
+    caption: "Open-Air Pine Garden",
+    subtitle: "MEJA PIKNIK KAYU TERBUKA DI BAWAH RINDANG POHON"
   }
 ];
 
@@ -93,9 +93,9 @@ const menuChapters = [
 ---
 
 <Layout
-  title="Jolotundo Cafe & Warung Ketan | Kuliner Pinus & Kopi Lereng Wilis"
-  description="Pondok cafe kayu pinus & warung ketan legendaris di Jolotundo Edupark Bajulan. Nikmati aneka olahan ketan pulen hangat, bakso kuah rempah, kudapan krispi, dan seduhan kopi lereng Wilis."
-  image="/images/facilities/jolotundo-cafe-ketan.jpg"
+  title="Jolotundo Cafe | Open-Air Coffee Bar & Kuliner Hutan Pinus"
+  description="Jolotundo Cafe & Coffee Bar di tengah hutan pinus Jolotundo Edupark Bajulan. Nikmati racikan kopi & latte, ayam & nasi, bakso & mie hangat, Nusantara & Chinese snack, aneka bapao, serta dessert."
+  image="/images/resto/jolocafe/jolo1.avif"
 >
   <!-- Fullscreen Floating Pill Navigation -->
   <Navbar />
@@ -126,7 +126,7 @@ const menuChapters = [
         
         <!-- Monospace Kicker Pill -->
         <span class="text-[10px] sm:text-xs font-mono-tag tracking-[0.2em] sm:tracking-[0.28em] uppercase text-[#d8c39e] mb-3 sm:mb-5 block drop-shadow">
-          — WARUNG KETAN & KOPI PINUS
+          — OPEN-AIR COFFEE BAR & PINE DINING
         </span>
 
         <!-- Clean, Powerful & Elegant Title -->
@@ -136,7 +136,7 @@ const menuChapters = [
 
         <!-- Simple, Clean & Poetic Subtitle -->
         <p class="text-xs sm:text-base md:text-lg font-sans text-white/80 max-w-md sm:max-w-xl mx-auto mt-3 sm:mt-5 drop-shadow leading-relaxed font-light">
-          Hangatnya ketan tradisional legendaris dan seduhan kopi lereng Wilis di bawah naungan rimbun kanopi pinus.
+          Racikan kopi hangat, aneka hidangan Nusantara, dan area duduk open-air yang menyatu langsung dengan rimbun hutan pinus.
         </p>
 
         <!-- Clean Subtle Action Links -->
@@ -210,7 +210,7 @@ const menuChapters = [
 
           <!-- Secondary Subtitle matching GoUncharted -->
           <p class="text-base sm:text-xl lg:text-2xl text-[#141110]/60 font-sans font-light leading-relaxed mt-8 sm:mt-12 max-w-2xl">
-            Pondok kayu alami dengan aroma seduhan kopi khas Jawa Timur dan gurihnya ketan bertabur kelapa muda, menghadirkan suasana santai yang menghangatkan tubuh di tengah dinginnya udara lereng Wilis.
+            Kafe terbuka bernuansa modern-alami dengan bar kopi barista, kanopi tenda teduh, dan deretan meja kayu di tengah pepohonan pinus — tempat sempurna bersantai menikmati hidangan hangat di sejuknya lereng Wilis.
           </p>
         </div>
 
@@ -261,7 +261,7 @@ const menuChapters = [
             </h2>
             <!-- Editorial Description -->
             <p class="text-sm sm:text-base lg:text-lg text-[#141110]/70 font-sans font-light leading-relaxed mt-4 sm:mt-5 max-w-3xl">
-              Disajikan dengan format buku menu 3D interaktif layaknya memegang buku menu fisik di atas meja kayu pinus. Jelajahi 10 halaman sajian ketan aneka topping, bakso kuah rempah, mie lezat, aneka Chinese snack, dessert manis, hingga racikan kopi lereng Wilis.
+              Disajikan dengan format buku menu 3D interaktif yang praktis dijelajahi. Temukan 10 halaman pilihan menu mulai dari hidangan ayam & nasi, bakso & mie hangat, Nusantara & Chinese snack, aneka bapao, dessert, racikan kopi & latte, hingga jus & minuman anak.
             </p>
           </div>
 
@@ -541,7 +541,7 @@ const menuChapters = [
         <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#141110]/15 w-full max-w-[1680px] mx-auto shrink-0">
           <div class="flex items-center gap-2.5 text-xs font-mono-tag text-[#141110]/70 tracking-widest uppercase">
             <span class="w-1.5 h-1.5 bg-[#141110]"></span>
-            <span>PREVIEW GALLERY // SUASANA & WARUNG KETAN</span>
+            <span>PREVIEW GALLERY // COFFEE BAR & OPEN-AIR AREA</span>
           </div>
           <div class="flex items-center gap-2 text-[11px] font-mono-tag text-[#141110]/60 uppercase tracking-widest">
             <span class="hidden sm:inline">Scroll ke bawah untuk eksplorasi visual suasana cafe</span>
@@ -611,10 +611,10 @@ const menuChapters = [
             <div class="flex flex-wrap items-center gap-4 sm:gap-8">
               <div>
                 <h4 class="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-[#141110] uppercase font-sans leading-none">
-                  Jolotundo Cafe & Warung Ketan
+                  Jolotundo Cafe
                 </h4>
                 <span class="text-[10px] font-mono-tag text-[#141110]/60 uppercase tracking-widest block mt-0.5">
-                  Pine Forest Chalet · Bajulan Loceret
+                  Open-Air Coffee Bar · Bajulan Loceret
                 </span>
               </div>
 
@@ -687,7 +687,7 @@ const menuChapters = [
               Sistem Pemesanan Cepat & Fleksibilitas Tempat Duduk
             </h3>
             <p class="text-xs sm:text-sm text-white/80 font-sans font-light leading-relaxed max-w-3xl">
-              Pengunjung bebas memilih area duduk indoor berpemanas nuansa kayu maupun alfresco deck di bawah pohon pinus. Untuk efisiensi, silakan lakukan pemesanan mandiri melalui <strong>Scan QR Barcode</strong> yang tersedia di atas meja Anda atau kunjungi meja kasir utama. Pesanan hangat akan segera diantarkan oleh waiter ke meja Anda.
+              Pengunjung bebas memilih tempat duduk di area coffee bar semi-outdoor, bawah kanopi tenda teduh, hingga meja piknik terbuka di bawah pohon pinus. Untuk efisiensi, silakan lakukan pemesanan mandiri melalui <strong>Scan QR Barcode</strong> yang tersedia di atas meja Anda atau langsung melalui kasir bar utama. Pesanan hangat akan segera diantarkan oleh waiter ke meja Anda.
             </p>
           </div>
 
@@ -701,7 +701,7 @@ const menuChapters = [
               Order / Pre-Order Rombongan ↗
             </a>
             <span class="text-[10px] font-mono-tag text-white/50 text-center uppercase tracking-wider">
-              Tersedia Paket Sarapan Pagi & Snack Box
+              Tersedia Menu Sarapan, Kopi & Hidangan Rombongan
             </span>
           </div>
 
