@@ -53,14 +53,16 @@ const googleMapsUrl = "https://maps.google.com/?q=Jolotundo+Glamping+and+Edupark
       Ceritakan kapan dan bersama siapa Anda akan berkunjung. Tim concierge kami akan merespons dengan jadwal ketersediaan nyata, rekomendasi glamping terbaik, atau opsi tanggal ideal di lereng Wilis.
     </p>
 
-    <!-- Action Buttons: [ Pesan Tenda Online ] & [ Konsultasi Concierge ] -->
+    <!-- Action Buttons: [ Pesan Sekarang (Online) ] & [ Kontak Kami ] -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
       <a
-        href="/kontak"
+        href="https://jolotundo.netlify.app/"
+        target="_blank"
+        rel="noopener noreferrer"
         class="group inline-flex items-center bg-white text-[#141110] font-sans text-sm sm:text-base font-semibold transition-all duration-300 shadow-[0_10px_35px_rgba(0,0,0,0.6)] hover:bg-[#f4efe6] overflow-hidden cursor-pointer pe-1"
       >
         <span class="px-6 sm:px-8 py-3.5 sm:py-4 tracking-tight">
-          Kontak Kami
+          Pesan Sekarang (Online)
         </span>
         <span class="w-11 sm:w-12 h-11 sm:h-12 bg-black text-white flex items-center justify-center shrink-0 group-hover:bg-[#1f1b19] transition-colors">
           <svg 
@@ -79,12 +81,10 @@ const googleMapsUrl = "https://maps.google.com/?q=Jolotundo+Glamping+and+Edupark
       </a>
 
       <a
-        href={`https://wa.me/${siteData.brand.whatsapp}?text=${encodeURIComponent("Halo Concierge Jolotundo, saya ingin merencanakan liburan glamping.")}`}
-        target="_blank"
-        rel="noopener noreferrer"
+        href="/kontak"
         class="inline-flex items-center gap-2 px-6 sm:px-7 py-3.5 sm:py-4 bg-black/60 hover:bg-black text-[#f4efe6] backdrop-blur-md border border-white/20 hover:border-white font-sans text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all duration-300 shadow-xl"
       >
-        <span>Konsultasi Concierge</span>
+        <span>Kontak Kami</span>
         <span>↗</span>
       </a>
     </div>
