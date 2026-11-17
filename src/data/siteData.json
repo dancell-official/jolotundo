@@ -24,7 +24,12 @@
     "whatsappOutbound": "6282249829998",
     "whatsappOutboundDisplay": "0822 4982 9998",
     "email": "jolotundoedupark@gmail.com",
-    "bookingUrl": "https://jolotundo.netlify.app/"
+    "bookingUrl": "https://jolotundo.netlify.app/",
+    "social": {
+      "instagram": "https://www.instagram.com/jolotundoedupark",
+      "tiktok": "https://www.tiktok.com/@jolotundo.cafe.gl",
+      "youtube": "https://www.youtube.com/@Jolotundo_Officiall"
+    }
   },
   "heroStats": [
     {

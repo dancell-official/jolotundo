@@ -56,6 +56,11 @@ const baseSchemas: Array<Record<string, any>> = [
 		"image": `${siteBase}/og-image.jpg`,
 		"logo": `${siteBase}/og-image.jpg`,
 		"hasMap": "https://maps.google.com/?q=-7.738389,111.825667",
+		"sameAs": [
+			siteData.brand.social.instagram,
+			siteData.brand.social.tiktok,
+			siteData.brand.social.youtube
+		],
 		"telephone": `+${siteData.brand.whatsapp}`,
 		"email": siteData.brand.email,
 		"priceRange": "Rp 150.000 - Rp 1.200.000",
