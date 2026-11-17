@@ -38,12 +38,23 @@ const routeStackItems = [
     pills: ["JEMBATAN UTAMA", "SEKTOR TIMUR (GLAMPING & RESTO)", "SEKTOR BARAT (TENDA 01–100)"]
   }
 ];
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Lokasi & Denah 2D", "item": `${siteBase}/lokasi` }
+  ]
+};
 ---
 
 <Layout
-  title="Lokasi, Rute & Denah Kawasan 2D | Jolotundo Glamping & Edupark"
-  description="Panduan rute dari Tol Nganjuk & Bandara Dhoho Kediri menuju Desa Bajulan, lengkap dengan peta masterplan interaktif 2D meliputi 100 kavling tenda, Korean Glamping, Indian Camp, dan area outbound."
-  image="/images/maps/denah-lokasi-lengkap.jpg"
+  title="Lokasi, Rute & Denah 2D — Jolotundo Glamping"
+  description="Panduan rute menuju Jolotundo Bajulan Nganjuk dari Tol & Bandara Dhoho, lengkap dengan denah masterplan interaktif 2D 100 kavling tenda."
+  image="/og-image.jpg"
+  keywords="jolotundo, lokasi jolotundo, rute jolotundo bajulan, peta jolotundo glamping, alamat jolotundo nganjuk"
+  schema={breadcrumbSchema}
 >
   <Navbar />
 

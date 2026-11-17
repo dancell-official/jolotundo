@@ -10,12 +10,23 @@ const generalWaUrl = `https://wa.me/${generalWa}?text=${encodeURIComponent("Halo
 const outboundPhone = siteData.brand.whatsappOutboundDisplay || "0822 4982 9998";
 const outboundWa = siteData.brand.whatsappOutbound || "6282249829998";
 const outboundWaUrl = `https://wa.me/${outboundWa}?text=${encodeURIComponent("Halo Admin Dan Group Jolotundo, saya ingin konsultasi paket outbound / gathering instansi.")}`;
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Kontak Kami", "item": `${siteBase}/kontak` }
+  ]
+};
 ---
 
 <Layout
   title="Kontak Kami — Jolotundo Glamping & Edupark"
-  description="Hubungi kontak resmi Jolotundo Glamping & Edupark. Tersedia 2 saluran layanan: nomor 0822 2950 0998 untuk layanan umum & reservasi glamping, dan nomor 0822 4982 9998 khusus outbound & gathering korporat."
-  image="/images/hero.jpg"
+  description="Hubungi kontak resmi Jolotundo Glamping & Edupark: 0822 2950 0998 (umum & glamping) atau 0822 4982 9998 (outbound & gathering)."
+  image="/og-image.jpg"
+  keywords="jolotundo, kontak jolotundo, booking jolotundo glamping, whatsapp jolotundo, reservasi outbound jolotundo"
+  schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Pill Navbar -->
   <Navbar />

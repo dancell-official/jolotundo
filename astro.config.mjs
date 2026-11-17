@@ -5,12 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
 
-const siteUrl =
-  process.env.SITE_URL ||
-  process.env.CF_PAGES_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'https://jolotundo.pages.dev');
+const siteUrl = process.env.SITE_URL || 'https://jolotundoglamping.com';
 
 // https://astro.build/config
 export default defineConfig({

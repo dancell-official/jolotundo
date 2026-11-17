@@ -10,7 +10,7 @@ interface SitemapEntry {
 }
 
 export const GET: APIRoute = ({ site }) => {
-  const baseUrl = site ? site.toString().replace(/\/$/, '') : 'https://jolotundo.vercel.app';
+  const baseUrl = site ? site.toString().replace(/\/$/, '') : 'https://jolotundoglamping.com';
   const lastmod = new Date().toISOString().split('T')[0];
 
   const staticEntries: SitemapEntry[] = [

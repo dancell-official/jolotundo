@@ -94,12 +94,23 @@ const activities = [
     gridClass: "grid-col-5 camp-card-hero"
   }
 ];
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Wahana & Rekreasi", "item": `${siteBase}/wahana` }
+  ]
+};
 ---
 
 <Layout 
-  title="Wahana, Petualangan & Rekreasi — Jolotundo Glamping & Edupark"
-  description="Katalog resmi wahana petualangan ATV Adventure, Jeep Offroad 4x4, wisata berkuda, Mini Zoo Edupark ramah anak, pine forest spa, dan paket outbound gathering korporat di lereng Gunung Wilis Nganjuk."
-  image="/images/activities/wahana-hero.jpg"
+  title="Wahana & Rekreasi — Jolotundo Glamping & Edupark"
+  description="Wahana seru di Jolotundo Nganjuk: ATV Adventure, Jeep Offroad 4x4, berkuda, Mini Zoo ramah anak, forest spa, dan outbound gathering."
+  image="/og-image.jpg"
+  keywords="jolotundo, wahana jolotundo, atv jolotundo, jeep offroad nganjuk, mini zoo jolotundo, berkuda nganjuk, outbound jolotundo"
+  schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Pill Navbar -->
   <Navbar />

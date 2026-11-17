@@ -90,12 +90,23 @@ const menuChapters = [
   { page: 9, title: "Kopi & Latte" },
   { page: 10, title: "Jus & Minuman Anak" }
 ];
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Jolotundo Cafe", "item": `${siteBase}/fasilitas/jolotundo-cafe` }
+  ]
+};
 ---
 
 <Layout
-  title="Jolotundo Cafe | Open-Air Coffee Bar & Kuliner Hutan Pinus"
-  description="Jolotundo Cafe & Coffee Bar di tengah hutan pinus Jolotundo Edupark Bajulan. Nikmati racikan kopi & latte, ayam & nasi, bakso & mie hangat, Nusantara & Chinese snack, aneka bapao, serta dessert."
-  image="/images/resto/jolocafe/jolo1.avif"
+  title="Jolotundo Cafe — Open-Air Coffee Bar Hutan Pinus"
+  description="Jolotundo Cafe di tengah hutan pinus Bajulan, Nganjuk. Nikmati racikan kopi & latte, hidangan hangat, bapao, snack & dessert."
+  image="/og-image.jpg"
+  keywords="jolotundo, jolotundo cafe, cafe hutan pinus nganjuk, kopi bajulan nganjuk, wisata kuliner jolotundo"
+  schema={breadcrumbSchema}
 >
   <!-- Fullscreen Floating Pill Navigation -->
   <Navbar />

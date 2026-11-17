@@ -116,12 +116,23 @@ const categories = [
   { id: "forest", label: "Hutan Pinus" },
   { id: "ground", label: "Camping Ground" }
 ];
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Akomodasi & Glamping", "item": `${siteBase}/akomodasi` }
+  ]
+};
 ---
 
 <Layout 
-  title="Koleksi Akomodasi & Glamping — Jolotundo Glamping & Edupark"
-  description="Koleksi lengkap 7 tipe penginapan di Jolotundo Glamping & Edupark, Bajulan, Nganjuk: Deluxe Camp AC, Superior Camp, Korean Glamping, Indian Camp, River Camp, Pinus Camp & Plus, serta Camping Ground."
-  image="/images/accommodations/deluxe-camp-new.jpg"
+  title="Akomodasi & Glamping — Jolotundo Glamping & Edupark"
+  description="7 tipe penginapan di Jolotundo Nganjuk: Deluxe Camp AC, Superior Camp, Korean & Indian Glamping, River Camp, Pinus Camp & Camping Ground."
+  image="/og-image.jpg"
+  keywords="jolotundo, akomodasi jolotundo, glamping jolotundo, deluxe camp jolotundo, river camp jolotundo, korean glamping nganjuk, indian camp jolotundo"
+  schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Pill Navbar -->
   <Navbar />
@@ -133,6 +144,7 @@ const categories = [
     <!-- HEADER SECTION: 1:1 GOUNCHARTED MINIMALIST EDITORIAL (CENTERED)           -->
     <!-- ========================================================================= -->
     <header class="catalog-header px-6 sm:px-10 lg:px-14 xl:px-20 text-center flex flex-col items-center">
+      <h1 class="sr-only">Koleksi Akomodasi &amp; Glamping Jolotundo Nganjuk</h1>
       
       <!-- Top Small Spaced Kicker: EXPLORE BY CATEGORY -->
       <span class="text-[11px] sm:text-xs font-mono-tag text-[#141110]/60 tracking-[0.25em] uppercase mb-4 sm:mb-5 block">

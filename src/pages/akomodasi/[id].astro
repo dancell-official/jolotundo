@@ -41,18 +41,13 @@ const isKorean = camp.id === 'korean-glamping';
 const heroImage = camp.editorialImage || camp.image;
 const pills = camp.pills || [camp.setting, camp.elevation || "±800 MDPL", camp.tier, `Kapasitas ${camp.capacity}`];
 
-// SEO: Map reliable .jpg Open Graph previews & handle alias canonical
-const ogImageMap: Record<string, string> = {
-  "deluxe-camp": "/images/accommodations/deluxe-camp-new.jpg",
-  "superior-camp": "/images/accommodations/superior-camp-new.jpg",
-  "korean-glamping": "/images/accommodations/korean-glamping-editorial.jpg",
-  "indian-camp": "/images/hero.jpg",
-  "river-camp": "/images/accommodations/river-camp-editorial.jpg",
-  "pinus-camp": "/images/accommodations/pinus-camp-plus-new.jpg",
-  "camping-ground": "/images/accommodations/camping-ground-new.jpg"
-};
+// SEO: Canonical, Breadcrumb Schema & concise 120-155 char description
 const isAliasRoute = Astro.params.id === 'pinus-camp-plus';
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundo.vercel.app').replace(/\/$/, '');
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const rawCampDesc = `${camp.name} di Jolotundo Glamping Nganjuk. ${camp.headline || camp.tagline} (${camp.capacity}).`;
+const seoDesc = rawCampDesc.length > 155
+  ? `${camp.name} di Jolotundo Glamping Nganjuk. Kapasitas ${camp.capacity}, ${camp.setting}, tarif ${camp.priceWeekday}/malam.`
+  : rawCampDesc;
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -66,11 +61,12 @@ const breadcrumbSchema = {
 
 <Layout 
   title={`${camp.name} — Jolotundo Glamping & Edupark`}
-  description={`${camp.name} di Jolotundo Glamping & Edupark. ${camp.headline || camp.tagline}. Kapasitas ${camp.capacity}, ${camp.setting}.`}
-  image={ogImageMap[camp.id] || "/images/hero.jpg"}
+  description={seoDesc}
+  image="/og-image.jpg"
   canonical={`/akomodasi/${camp.id}`}
   noindex={isAliasRoute}
   preloadHero={heroImage}
+  keywords={`jolotundo, ${camp.name.toLowerCase()}, glamping jolotundo, penginapan bajulan nganjuk, ${camp.tier.toLowerCase()}`}
   schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Capsule Navbar -->

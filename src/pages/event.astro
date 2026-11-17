@@ -3,12 +3,23 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import EventSectorGrid from '../components/EventSectorGrid.astro';
 import FooterCTA from '../components/FooterCTA.astro';
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Event, Wedding & Gathering", "item": `${siteBase}/event` }
+  ]
+};
 ---
 
 <Layout 
-  title="Event, Wedding & Gathering — Jolotundo Glamping & Culture"
-  description="Layanan venue pernikahan alam terbuka, sewa aula kaca ber-AC, dan paket outbound gathering korporat di ketinggian 800 MDPL Gunung Wilis."
-  image="/images/facilities/event-hero.jpg"
+  title="Event, Wedding & Gathering — Jolotundo Glamping"
+  description="Venue outdoor wedding, sewa aula kaca ber-AC, dan paket outbound gathering di Jolotundo Bajulan Nganjuk, ketinggian 800 MDPL."
+  image="/og-image.jpg"
+  keywords="jolotundo, event jolotundo, wedding outdoor nganjuk, sewa aula nganjuk, outbound gathering jolotundo, venue bajulan"
+  schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Pill Navbar (GoUncharted Standard) -->
   <Navbar />

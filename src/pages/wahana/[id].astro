@@ -26,15 +26,12 @@ const waPhone = activity.contactType === "corporate"
 
 const waUrl = `https://wa.me/${waPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Halo Admin Jolotundo Edupark, saya ingin reservasi slot dan info ketersediaan untuk wahana *${activity.name}*.`)}`;
 
-const ogImageMap: Record<string, string> = {
-  "atv-adventure": "/images/activities/atv-adventure.jpg",
-  "jeep-offroad": "/images/activities/jeep-offroad.jpg",
-  "wisata-berkuda": "/images/activities/horse-riding.jpg",
-  "forest-spa": "/images/activities/forest-spa.jpg",
-  "mini-zoo": "/images/activities/mini-zoo.jpg",
-  "outbound-gathering": "/images/activities/outbound-gathering.jpg"
-};
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundo.vercel.app').replace(/\/$/, '');
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const priceText = activity.priceStarting.toLowerCase().includes('gratis') ? 'Gratis tiket masuk' : `Mulai ${activity.priceStarting}`;
+const rawActivityDesc = `${activity.name} di Jolotundo Bajulan, Nganjuk (${priceText}). ${activity.headline}.`;
+const seoDesc = rawActivityDesc.length > 155
+  ? `${activity.name} di Jolotundo Glamping & Edupark Bajulan, Nganjuk (${priceText}). Cek paket lengkapnya.`
+  : rawActivityDesc;
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -48,8 +45,9 @@ const breadcrumbSchema = {
 
 <Layout 
   title={`${activity.name} — Jolotundo Glamping & Edupark`}
-  description={`${activity.name} di Jolotundo Glamping & Edupark, Bajulan, Nganjuk. ${activity.tagline} ${activity.priceStarting.toLowerCase().includes('gratis') ? 'Gratis tiket masuk kunjungan.' : `Mulai ${activity.priceStarting}.`}`}
-  image={ogImageMap[activity.id] || "/images/activities/wahana-hero.jpg"}
+  description={seoDesc}
+  image="/og-image.jpg"
+  keywords={`jolotundo, ${activity.name.toLowerCase()}, wahana jolotundo, wisata bajulan nganjuk, ${activity.tier.toLowerCase()}`}
   schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Capsule Navbar -->

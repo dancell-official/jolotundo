@@ -10,12 +10,23 @@ import AboutClienteleQuotes from '../components/AboutClienteleQuotes.astro';
 
 // Split kata untuk efek Scroll-Driven Word Reveal (1:1 GoUncharted Editorial Architecture)
 const manifestoWords = "Lebih dari sekadar tempat menginap, kami menghadirkan ruang untuk terhubung kembali dengan alam dan merajut kebersamaan.".split(" ");
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "Tentang Kami", "item": `${siteBase}/tentang` }
+  ]
+};
 ---
 
 <Layout 
-  title="Tentang Kami — Jolotundo Glamping & Edupark (Dan Group)"
-  description="Kisah perjalanan Jolotundo Glamping & Edupark di lereng Gunung Wilis, Desa Bajulan, Nganjuk. Dari inisiatif 4 tenda internal Dan Group di tahun 2023 hingga bertransformasi menjadi pelopor destinasi ekowisata terpadu di Indonesia."
-  image="/images/hero.jpg"
+  title="Tentang Kami — Jolotundo Glamping & Edupark"
+  description="Kisah Jolotundo Glamping & Edupark (Dan Group) di lereng Gunung Wilis Bajulan, Nganjuk: ekowisata terpadu berwawasan lingkungan."
+  image="/og-image.jpg"
+  keywords="jolotundo, tentang jolotundo, dan group jolotundo, ekowisata gunung wilis, wisata bajulan nganjuk"
+  schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Pill Navbar -->
   <Navbar />

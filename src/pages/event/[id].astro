@@ -23,12 +23,11 @@ const waPhone = venue.contactWa || "6282249829998";
 const waMessage = `Halo Admin Jolotundo Glamping & Culture, saya ingin konsultasi dan informasi ketersediaan untuk *${venue.name}*.`;
 const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
 
-const ogImageMap: Record<string, string> = {
-  "wedding": "/images/facilities/wedding-forest.jpg",
-  "aula-hall": "/images/facilities/glass-hall-venue.jpg",
-  "gathering-outbound": "/images/facilities/meeting-hall-pendopo.jpg"
-};
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundo.vercel.app').replace(/\/$/, '');
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const rawEventDesc = `${venue.name} di Jolotundo Bajulan, Nganjuk. ${venue.category} sejuk 800 MDPL, mulai ${venue.priceStarting}. Reservasi sekarang.`;
+const seoDesc = rawEventDesc.length > 155
+  ? `${venue.name} di Jolotundo Bajulan, Nganjuk. Venue sejuk 800 MDPL, mulai ${venue.priceStarting}.`
+  : rawEventDesc;
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -41,9 +40,10 @@ const breadcrumbSchema = {
 ---
 
 <Layout 
-  title={`${venue.name} — Jolotundo Glamping & Culture`}
-  description={`${venue.name} di Jolotundo Glamping & Culture, Bajulan, lereng Gunung Wilis. ${venue.tagline}. Mulai ${venue.priceStarting}.`}
-  image={ogImageMap[venue.id] || "/images/facilities/event-hero.jpg"}
+  title={`${venue.name} — Jolotundo Glamping`}
+  description={seoDesc}
+  image="/og-image.jpg"
+  keywords={`jolotundo, ${venue.name.toLowerCase()}, event jolotundo, venue bajulan nganjuk, ${venue.category.toLowerCase()}`}
   schema={breadcrumbSchema}
 >
   <!-- Floating Expanding Capsule Navbar -->

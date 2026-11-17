@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = ({ site }) => {
-  const baseUrl = site ? site.toString().replace(/\/$/, '') : 'https://jolotundo.vercel.app';
+  const baseUrl = site ? site.toString().replace(/\/$/, '') : 'https://jolotundoglamping.com';
   const content = [
     'User-agent: *',
     'Allow: /',

@@ -16,26 +16,32 @@ interface Props {
 }
 
 const { 
-	title = "Jolotundo Glamping & Edupark — Ekowisata Pegunungan Nganjuk (Dan Group)",
-	description = "Pionir destinasi ekowisata terpadu di lereng Gunung Wilis, Bajulan, Nganjuk. Menghadirkan kemewahan glamping tematik, outbound korporat, eduwisata, dan nuansa hutan pinus berkabut.",
-	image = "/images/hero.jpg",
+	title = "Jolotundo Glamping & Edupark — Wisata Gunung Wilis Nganjuk",
+	description = "Destinasi glamping & edupark di lereng Gunung Wilis, Nganjuk. Nikmati Deluxe & River Camp, Korean Glamping, ATV, Jeep, Mini Zoo & cafe.",
+	image = "/og-image.jpg",
 	canonical,
 	type = "website",
 	noindex = false,
 	preloadHero,
-	keywords = "Jolotundo Glamping, Jolotundo Edupark, Glamping Nganjuk, Wisata Bajulan Nganjuk, Camping Gunung Wilis, Outbound Nganjuk, River Camp, Deluxe Camp, Indian Camp, Korean Glamping, River Breeze Cafe",
+	keywords = "jolotundo, jolotundo glamping, jolotundo edupark, glamping nganjuk, wisata bajulan nganjuk, camping gunung wilis, outbound nganjuk, river camp jolotundo, korean glamping jolotundo, river breeze cafe",
 	schema
 } = Astro.props;
 
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundo.vercel.app').replace(/\/$/, '');
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
 const rawPath = canonical
 	? (canonical.startsWith('http') ? canonical : `${siteBase}${canonical.startsWith('/') ? canonical : `/${canonical}`}`)
 	: `${siteBase}${Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '')}`;
 const canonicalURL = rawPath;
 
-// Social crawlers (WhatsApp, IG, FB, X) reliably render JPEG/PNG; fallback to hero.jpg if an AVIF path is passed
-const safeOgPath = /\.(jpe?g|png|webp)$/i.test(image) ? image : '/images/hero.jpg';
+// Social crawlers (WhatsApp, IG, FB, X) reliably render JPEG/PNG; fallback to /og-image.jpg if an AVIF path is passed
+const safeOgPath = /\.(jpe?g|png|webp)$/i.test(image) ? image : '/og-image.jpg';
 const ogImageURL = safeOgPath.startsWith('http') ? safeOgPath : `${siteBase}${safeOgPath}`;
+const isDefaultOgImage = safeOgPath === '/og-image.jpg';
+const ogImageType = /\.png$/i.test(safeOgPath)
+	? 'image/png'
+	: /\.webp$/i.test(safeOgPath)
+	? 'image/webp'
+	: 'image/jpeg';
 
 // Global Schema.org Structured Data (Campground / TouristAttraction & WebSite)
 const baseSchemas: Array<Record<string, any>> = [
@@ -44,10 +50,12 @@ const baseSchemas: Array<Record<string, any>> = [
 		"@type": ["Campground", "TouristAttraction"],
 		"@id": `${siteBase}/#organization`,
 		"name": siteData.brand.fullName,
-		"alternateName": "Jolotundo Glamping & Culture",
+		"alternateName": "Jolotundo",
 		"description": siteData.brand.subHeadline,
 		"url": siteBase,
-		"image": `${siteBase}/images/hero.jpg`,
+		"image": `${siteBase}/og-image.jpg`,
+		"logo": `${siteBase}/og-image.jpg`,
+		"hasMap": "https://maps.google.com/?q=-7.738389,111.825667",
 		"telephone": `+${siteData.brand.whatsapp}`,
 		"email": siteData.brand.email,
 		"priceRange": "Rp 150.000 - Rp 1.200.000",
@@ -90,6 +98,7 @@ const baseSchemas: Array<Record<string, any>> = [
 		"@id": `${siteBase}/#website`,
 		"url": siteBase,
 		"name": siteData.brand.fullName,
+		"alternateName": "Jolotundo",
 		"inLanguage": "id-ID",
 		"publisher": {
 			"@id": `${siteBase}/#organization`
@@ -108,6 +117,7 @@ const allSchemas = [...baseSchemas, ...extraSchemas];
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="theme-color" content="#0b130e" />
+		<meta name="format-detection" content="telephone=no" />
 
 		<!-- Primary SEO Meta Tags -->
 		<title>{title}</title>
@@ -137,13 +147,23 @@ const allSchemas = [...baseSchemas, ...extraSchemas];
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:image:secure_url" content={ogImageURL} />
+		<meta property="og:image:type" content={ogImageType} />
+		{isDefaultOgImage && (
+			<>
+				<meta property="og:image:width" content="2400" />
+				<meta property="og:image:height" content="1260" />
+			</>
+		)}
 		<meta property="og:image:alt" content={title} />
 
 		<!-- Twitter Card -->
 		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalURL} />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={ogImageURL} />
+		<meta name="twitter:image:alt" content={title} />
 
 		<!-- Conditional Preload Hero LCP Image -->
 		{preloadHero && (

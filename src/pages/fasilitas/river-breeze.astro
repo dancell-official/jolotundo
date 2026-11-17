@@ -140,12 +140,23 @@ const menuChapters = [
   { page: 14, title: "Aneka Jus & Teh", tag: "FRESH JUICE" },
   { page: 15, title: "Specialty Coffee", tag: "COFFEE BAR" }
 ];
+const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
+    { "@type": "ListItem", "position": 2, "name": "River Breeze Cafe & Resto", "item": `${siteBase}/fasilitas/river-breeze` }
+  ]
+};
 ---
 
 <Layout 
-  title="River Breeze Cafe & Resto — Riverside Dining & Lounge | Jolotundo Glamping"
-  description="Sensasi santap istimewa di atas panggung dek kayu alami tepat di bibir aliran sungai jernih lereng Wilis. Buku menu resmi 15 halaman kuliner Nusantara, steak, seafood & specialty coffee."
-  image="/images/facilities/pine-resto-cafe.jpg"
+  title="River Breeze Resto — Kuliner Tepi Sungai Jolotundo"
+  description="Kuliner tepi sungai alami di River Breeze Cafe & Resto Jolotundo Bajulan, Nganjuk. Tersedia menu Nusantara, gurami, steak & kopi."
+  image="/og-image.jpg"
+  keywords="jolotundo, river breeze jolotundo, river breeze resto nganjuk, kuliner tepi sungai bajulan, resto jolotundo"
+  schema={breadcrumbSchema}
 >
   <!-- Expanding Pill Navbar -->
   <Navbar />
