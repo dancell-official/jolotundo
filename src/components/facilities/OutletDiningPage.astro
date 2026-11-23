@@ -1,0 +1,328 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../Navbar.astro';
+import FooterCTA from '../FooterCTA.astro';
+import MenuFlipbookViewer from './MenuFlipbookViewer.astro';
+import HorizontalPreviewGallery from '../common/HorizontalPreviewGallery.astro';
+import siteData from '../../data/siteData.json';
+import { calcGalleryScrollHeightVh } from '../../data/galleries';
+import type { OutletConfig } from '../../data/outlets';
+import { buildBreadcrumbSchema, buildDiningVenueSchema, getSiteBase } from '../../lib/seo';
+
+interface Props {
+  outlet: OutletConfig;
+}
+
+const { outlet } = Astro.props;
+
+const waPhone = siteData.brand.whatsapp || '6282249828998';
+const waUrl = `https://wa.me/${waPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(outlet.waDefaultMessage)}`;
+
+const placeHeadlineWords = outlet.place.headlineText.split(' ');
+const scrollHeightVh = calcGalleryScrollHeightVh(outlet.gallery.images.length, 350, 12);
+
+const siteBase = getSiteBase(Astro.site);
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: 'Beranda', path: '/' },
+  { name: outlet.seo.breadcrumbName, path: outlet.seo.path },
+]);
+
+const venueSchema = buildDiningVenueSchema(siteBase, {
+  type: outlet.seo.schemaType,
+  name: outlet.seo.schemaName,
+  description: outlet.seo.schemaDescription,
+  path: outlet.seo.path,
+  telephone: `+${siteData.brand.whatsapp}`,
+  servesCuisine: outlet.seo.servesCuisine,
+  priceRange: outlet.seo.priceRange,
+  hasMenuPath: outlet.menu.pdfHref,
+  opens: outlet.seo.opens,
+  closes: outlet.seo.closes,
+});
+---
+
+<Layout
+  title={outlet.seo.title}
+  description={outlet.seo.description}
+  image="/og-image.jpg"
+  keywords={outlet.seo.keywords}
+  schema={[breadcrumbSchema, venueSchema]}
+>
+  <Navbar />
+
+  <main
+    data-outlet-page
+    data-hero-section={outlet.hero.sectionId}
+    data-hero-layer={outlet.hero.parallaxLayerId}
+    class="min-h-screen bg-[#f4efe6] text-[#141110] selection:bg-[#141110] selection:text-white"
+  >
+    <!-- 1. Fullscreen Editorial Hero -->
+    <header
+      id={outlet.hero.sectionId}
+      class="relative h-screen h-[100dvh] min-h-[100dvh] w-full flex flex-col justify-between overflow-hidden bg-[#141110] text-[#f4efe6] select-none"
+    >
+      <div
+        id={outlet.hero.parallaxLayerId}
+        class="absolute inset-x-0 w-full h-[125%] -top-[12.5%] pointer-events-none will-change-transform z-0"
+        style="transform: translate3d(0, 0px, 0);"
+      >
+        <img
+          src={outlet.hero.imageSrc}
+          alt={outlet.hero.imageAlt}
+          class="w-full h-full object-cover object-center scale-105"
+          fetchpriority="high"
+          loading="eager"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/90 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+      </div>
+
+      <div class="h-20 sm:h-28 shrink-0"></div>
+
+      <div class="relative z-10 w-full max-w-[1680px] mx-auto px-5 sm:px-12 lg:px-16 flex flex-col items-center text-center my-auto py-4 sm:py-8">
+        <span class="text-[10px] sm:text-xs font-mono-tag tracking-[0.2em] sm:tracking-[0.28em] text-[#d8c39e] uppercase mb-3 sm:mb-5 block drop-shadow">
+          {outlet.hero.kicker}
+        </span>
+
+        <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-[-0.03em] text-white leading-[1.02] sm:leading-[0.96] font-sans drop-shadow-lg">
+          {outlet.hero.headline}
+        </h1>
+
+        <p class="text-xs sm:text-base md:text-lg font-sans text-white/80 max-w-md sm:max-w-xl mx-auto mt-3 sm:mt-5 drop-shadow leading-relaxed font-light">
+          {outlet.hero.subtitle}
+        </p>
+
+        <div class="flex items-center gap-3 sm:gap-6 mt-6 sm:mt-10 text-[11px] sm:text-xs font-mono-tag tracking-wider uppercase">
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 sm:px-5 py-2.5 sm:py-3 bg-[#d8c39e] hover:bg-white text-[#141110] font-bold transition-colors shadow-md flex items-center gap-1.5"
+          >
+            <span>{outlet.hero.primaryCtaLabel}</span>
+            <span>↗</span>
+          </a>
+          <a
+            href="#daftar-menu"
+            class="px-3 py-2 text-white/80 hover:text-white transition-colors border-b border-white/40 pb-0.5 flex items-center gap-1"
+          >
+            <span>{outlet.hero.secondaryCtaLabel}</span>
+            <span>↓</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative z-10 w-full px-5 sm:px-12 lg:px-16 pb-4 sm:pb-8 pt-3 border-t border-white/15 bg-gradient-to-t from-black/85 via-black/40 to-transparent shrink-0">
+        <div class="max-w-[1680px] mx-auto flex items-center justify-between gap-2 text-[10px] sm:text-xs font-mono-tag tracking-wider sm:tracking-widest uppercase text-white/70">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+            <span class="text-white font-medium truncate">{outlet.hero.locationBadge}</span>
+          </div>
+          <div class="flex items-center gap-2 sm:gap-6 text-white/60 shrink-0">
+            <span class="hidden sm:inline">{outlet.hero.capacityText}</span>
+            <span class="hidden sm:inline">•</span>
+            <span>{outlet.hero.hoursText}</span>
+            <span>•</span>
+            <span class="text-[#d8c39e] font-bold">{outlet.hero.entryText}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. The Place: Editorial Word Reveal + Hairline Spec Table -->
+    <section id="the-place" class="py-20 sm:py-28 lg:py-36 px-6 sm:px-10 lg:px-16 xl:px-20 border-b border-[#141110]/15 scroll-mt-12 bg-[#f4efe6]">
+      <div class="max-w-[1680px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 xl:gap-24 items-start">
+        <div class="lg:col-span-7 flex flex-col">
+          <span class="text-xs font-mono-tag tracking-[0.25em] text-[#141110]/60 uppercase mb-6 sm:mb-8 block">
+            — THE PLACE
+          </span>
+
+          <h2
+            id="place-reveal-heading"
+            class="text-3xl sm:text-5xl md:text-6xl lg:text-[3.6rem] xl:text-[4.2rem] leading-[1.08] tracking-[-0.03em] text-[#141110] font-normal"
+          >
+            {placeHeadlineWords.map((word) => (
+              <span
+                class="reveal-word inline-block mr-[0.22em] transition-opacity duration-150 ease-out will-change-[opacity]"
+                style="opacity: 0.18;"
+              >
+                {word}
+              </span>
+            ))}
+          </h2>
+
+          <p class="text-base sm:text-xl lg:text-2xl text-[#141110]/60 font-sans font-light leading-relaxed mt-8 sm:mt-12 max-w-2xl">
+            {outlet.place.subtitle}
+          </p>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col pt-2 lg:pt-4">
+          <div class="border-t border-[#141110]/20 divide-y divide-[#141110]/20">
+            {outlet.place.rows.map((row) => (
+              <div class="py-5 sm:py-6 flex items-start gap-6 sm:gap-8">
+                <span class="w-24 sm:w-32 shrink-0 text-xs font-mono-tag tracking-widest text-[#141110]/50 uppercase pt-0.5">
+                  {row.label}
+                </span>
+
+                <div class="flex-1 flex flex-col gap-1">
+                  <span class="text-base sm:text-lg font-bold text-[#141110] font-sans tracking-tight">
+                    {row.title}
+                  </span>
+                  <span class="text-xs sm:text-sm text-[#141110]/65 font-sans font-light leading-relaxed">
+                    {row.desc}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Interactive Heyzine 3D Menu Book -->
+    <MenuFlipbookViewer
+      kicker={outlet.menu.kicker}
+      headline={outlet.menu.headline}
+      description={outlet.menu.description}
+      pdfHref={outlet.menu.pdfHref}
+      pdfDownloadName={outlet.menu.pdfDownloadName}
+      quickNewTabHref={outlet.menu.quickNewTabHref}
+      flipbookUrl={outlet.menu.flipbookUrl}
+      toolbarTitle={outlet.menu.toolbarTitle}
+      modalEyebrow={outlet.menu.modalEyebrow}
+      modalAriaLabel={outlet.menu.modalAriaLabel}
+      iframeTitle={outlet.menu.iframeTitle}
+      modalIframeTitle={outlet.menu.modalIframeTitle}
+      tipsDesktop={outlet.menu.tipsDesktop}
+      tipsMobile={outlet.menu.tipsMobile}
+      waCtaLabel={outlet.menu.waCtaLabel}
+      waUrl={waUrl}
+      chapters={outlet.menu.chapters}
+      showFloatingExitBtn={outlet.menu.showFloatingExitBtn}
+      showMobileOverlayTriggers={outlet.menu.showMobileOverlayTriggers}
+    />
+
+    <!-- 4. Sticky Horizontal Scroll Preview Gallery -->
+    <HorizontalPreviewGallery
+      sectionId={outlet.gallery.sectionId}
+      viewportId={outlet.gallery.viewportId}
+      windowId={outlet.gallery.windowId}
+      trackId={outlet.gallery.trackId}
+      progressBarId={outlet.gallery.progressBarId}
+      images={outlet.gallery.images}
+      scrollHeightVh={scrollHeightVh}
+      sectionBorderClass="border-b border-[#141110]/15"
+      viewportPaddingClass="h-screen h-[100dvh] pt-16 sm:pt-20 pb-4 sm:pb-6"
+      topBar={{
+        leftText: outlet.gallery.topLeftText,
+        rightDesktopText: outlet.gallery.topRightDesktopText,
+      }}
+      title={outlet.gallery.title}
+      subtitle={outlet.gallery.subtitle}
+      specs={outlet.gallery.specs}
+      priceValue="Free HTM"
+      priceLabel="TERBUKA UNTUK UMUM"
+      ctaLabel={outlet.gallery.ctaLabel}
+      ctaHref={waUrl}
+    />
+
+    <!-- 5. Dining Rules & Ordering Guidance Banner -->
+    <section class="py-16 sm:py-20 px-4 sm:px-8 lg:px-14 border-b border-[#141110]/15 bg-[#141110] text-[#f4efe6]">
+      <div class="max-w-[1680px] mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          <div class="lg:col-span-8 flex flex-col gap-3">
+            <span class="text-xs font-mono-tag text-[#d8c39e] tracking-widest uppercase font-bold">
+              {outlet.guidanceBanner.kicker}
+            </span>
+            <h3 class="text-2xl sm:text-3xl font-bold font-sans uppercase tracking-tight text-white">
+              {outlet.guidanceBanner.headline}
+            </h3>
+            <p
+              class="text-xs sm:text-sm text-white/80 font-sans font-light leading-relaxed max-w-3xl"
+              set:html={outlet.guidanceBanner.htmlBody}
+            />
+          </div>
+
+          <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3">
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full py-3.5 bg-[#d8c39e] hover:bg-white text-[#141110] font-mono-tag text-xs font-bold uppercase tracking-wider text-center transition-colors shadow-lg"
+            >
+              {outlet.guidanceBanner.ctaLabel}
+            </a>
+            <span class="text-[10px] font-mono-tag text-white/50 text-center uppercase tracking-wider">
+              {outlet.guidanceBanner.noteText}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Outlet & Accommodation Navigation Switcher -->
+    <section class="py-16 sm:py-24 px-4 sm:px-8 lg:px-14 border-b border-[#141110]/15 select-none">
+      <div class="max-w-[1680px] mx-auto">
+        <div class="flex items-center justify-between pb-4 mb-8 border-b border-[#141110]/15 text-xs font-mono-tag text-[#141110]/60">
+          <span>NAVIGASI KULINER &amp; FASILITAS</span>
+          <span class="text-[#8c6d37]">JOLOTUNDO ECOSYSTEM</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          {outlet.switcherCards.map((card) => (
+            <a
+              href={card.href}
+              class="group p-6 sm:p-8 bg-white border border-[#141110]/15 hover:border-[#8c6d37] transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex items-center justify-between text-xs font-mono-tag text-[#8c6d37] mb-2 uppercase">
+                  <span>{card.tag}</span>
+                  <span class="group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-bold font-sans uppercase tracking-tight text-[#141110] mb-2">
+                  {card.title}
+                </h3>
+                <p class="text-xs sm:text-sm text-[#141110]/70 font-sans font-light leading-relaxed">
+                  {card.desc}
+                </p>
+              </div>
+              <div class="pt-6 mt-6 border-t border-[#141110]/10 flex items-center justify-between text-xs font-mono-tag text-[#141110]/80 font-bold uppercase">
+                <span>{card.ctaLabel}</span>
+                <span>↗</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <FooterCTA />
+
+  <script>
+    import { initHeroLayerParallax } from '../../scripts/heroParallax';
+    import { initWordReveal } from '../../scripts/wordReveal';
+
+    const mainEl = document.querySelector<HTMLElement>('[data-outlet-page]');
+    const heroSectionId = mainEl?.dataset.heroSection;
+    const heroLayerId = mainEl?.dataset.heroLayer;
+
+    if (heroSectionId && heroLayerId) {
+      initHeroLayerParallax({
+        sectionId: heroSectionId,
+        layerId: heroLayerId,
+        speed: 0.35,
+        viewportMultiplier: 1.5,
+      });
+    }
+
+    initWordReveal({
+      headingId: 'place-reveal-heading',
+      wordSelector: '.reveal-word',
+      startFactor: 0.85,
+      endFactor: 0.35,
+      minOpacity: 0.18,
+      rootMargin: '120px 0px',
+    });
+  </script>
+</Layout>

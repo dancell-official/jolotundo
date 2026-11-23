@@ -165,73 +165,8 @@ const { sectors } = eventData;
   </div>
 </section>
 
-<style>
-  .font-mono-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-</style>
+<script>
+  import { initSectorCardParallax } from '../scripts/sectionParallax';
 
-<!-- ========================================================================= -->
-<!-- JAVASCRIPT: SMOOTH SUB-PIXEL TRANSLATE-Y CARD PARALLAX ENGINE             -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initSectorCardParallax() {
-    const cards = Array.from(document.querySelectorAll('.sector-image-card'));
-    if (!cards.length) return;
-
-    // Responsive travel range: 88px desktop, 48px mobile (Punchy & noticeable)
-    const getTravelDistance = () => (window.innerWidth < 1024 ? 48 : 88);
-
-    const updateAll = () => {
-      const windowHeight = window.innerHeight;
-      const maxDist = getTravelDistance();
-
-      cards.forEach((card) => {
-        const layer = card.querySelector('.sector-parallax-layer');
-        if (!layer) return;
-
-        const rect = card.getBoundingClientRect();
-
-        // Check if card is currently intersecting the viewport area
-        if (rect.top <= windowHeight && rect.bottom >= 0) {
-          const totalTravel = rect.height + windowHeight;
-          const enterProgress = (windowHeight - rect.top) / totalTravel;
-          const progress = Math.max(0, Math.min(1, enterProgress));
-
-          // Sub-pixel translate-Y: smooth entry from -maxDist to +maxDist
-          const translateY = ((progress - 0.5) * 2 * maxDist).toFixed(1);
-          layer.style.transform = `translate3d(0, ${translateY}px, 0)`;
-        }
-      });
-    };
-
-    let isTicking = false;
-    const onScroll = () => {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateAll();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    };
-
-    // Smooth active scroll listener
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-
-    // Sync with smooth scroll (Lenis) if active on parent window
-    if (window.__lenis) {
-      window.__lenis.on('scroll', onScroll);
-    }
-
-    // Initial positioning
-    updateAll();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSectorCardParallax);
-  } else {
-    initSectorCardParallax();
-  }
+  initSectorCardParallax();
 </script>

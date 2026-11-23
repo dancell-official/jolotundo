@@ -5,6 +5,7 @@ import FooterCTA from '../../components/FooterCTA.astro';
 import WahanaPreviewGallery from '../../components/WahanaPreviewGallery.astro';
 import wahanaDetails from '../../data/wahanaDetails.json';
 import siteData from '../../data/siteData.json';
+import { buildBreadcrumbSchema, getSiteBase } from '../../lib/seo';
 
 export async function getStaticPaths() {
   return wahanaDetails.map((activity, idx) => {
@@ -26,21 +27,17 @@ const waPhone = activity.contactType === "corporate"
 
 const waUrl = `https://wa.me/${waPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Halo Admin Jolotundo Edupark, saya ingin reservasi slot dan info ketersediaan untuk wahana *${activity.name}*.`)}`;
 
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const siteBase = getSiteBase(Astro.site);
 const priceText = activity.priceStarting.toLowerCase().includes('gratis') ? 'Gratis tiket masuk' : `Mulai ${activity.priceStarting}`;
 const rawActivityDesc = `${activity.name} di Jolotundo Bajulan, Nganjuk (${priceText}). ${activity.headline}.`;
 const seoDesc = rawActivityDesc.length > 155
   ? `${activity.name} di Jolotundo Glamping & Edupark Bajulan, Nganjuk (${priceText}). Cek paket lengkapnya.`
   : rawActivityDesc;
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Wahana & Rekreasi", "item": `${siteBase}/wahana/` },
-    { "@type": "ListItem", "position": 3, "name": activity.name, "item": `${siteBase}/wahana/${activity.id}/` }
-  ]
-};
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Wahana & Rekreasi", path: "/wahana/" },
+  { name: activity.name, path: `/wahana/${activity.id}/` }
+]);
 ---
 
 <Layout 
@@ -357,47 +354,14 @@ const breadcrumbSchema = {
   <FooterCTA />
 </Layout>
 
-<!-- ========================================================================= -->
-<!-- PARALLAX TRANSLATE-Y CONTROLLER SCRIPT (GPU-Accelerated Smooth Parallax) -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initWahanaDetailHeroParallax() {
-    const heroSection = document.getElementById('wahana-hero');
-    const parallaxLayer = document.getElementById('hero-parallax-layer');
-    if (!heroSection || !parallaxLayer) return;
+<script>
+  import { initHeroLayerParallax } from '../../scripts/heroParallax';
 
-    let isTicking = false;
-
-    function updateParallax() {
-      const scrollY = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-
-      // Only calculate while hero is within view
-      if (scrollY <= heroHeight + 50) {
-        // Natural parallax formula: translates downwards at 32% speed of scroll
-        const translateY = scrollY * 0.32;
-        parallaxLayer.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    updateParallax();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWahanaDetailHeroParallax);
-  } else {
-    initWahanaDetailHeroParallax();
-  }
+  initHeroLayerParallax({
+    sectionId: 'wahana-hero',
+    layerId: 'hero-parallax-layer',
+    speed: 0.32,
+    bufferPx: 50,
+  });
 </script>
 

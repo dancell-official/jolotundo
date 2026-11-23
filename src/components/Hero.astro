@@ -95,80 +95,8 @@ import siteData from '../data/siteData.json';
 </section>
 
 <!-- Direct Lenis-Synced Parallax Engine for 100% Sub-Pixel Smoothness (Zero Blur Repaint Overhead) -->
-<script is:inline>
-  (function() {
-    const heroSection = document.getElementById('hero-section');
-    const heroBg = document.getElementById('hero-parallax-bg');
-    const heroContent = document.getElementById('hero-content');
-    if (!heroSection) return;
+<script>
+  import { initHomeHeroParallax } from '../scripts/heroParallax';
 
-    let heroHeight = heroSection.offsetHeight || 800;
-    let isHeroVisible = true;
-    let isTicking = false;
-
-    const checkMobile = () => window.innerWidth < 768;
-    let isMobile = checkMobile();
-
-    window.addEventListener('resize', () => {
-      heroHeight = heroSection.offsetHeight || 800;
-      const prevMobile = isMobile;
-      isMobile = checkMobile();
-      if (isMobile && !prevMobile && heroContent) {
-        heroContent.style.transform = '';
-        heroContent.style.opacity = '';
-      }
-    }, { passive: true });
-
-    if ('IntersectionObserver' in window) {
-      const obs = new IntersectionObserver((entries) => {
-        isHeroVisible = entries[0].isIntersecting;
-      }, { rootMargin: '100px 0px' });
-      obs.observe(heroSection);
-    }
-
-    function renderParallax() {
-      const scrollY = window.scrollY;
-      if (scrollY <= heroHeight * 1.25) {
-        if (isMobile) {
-          // MOBILE OPTIMIZATION:
-          // Only animate heroBg with pure GPU compositor transform (translate3d)
-          // NEVER mutate heroContent opacity or transform on mobile to prevent continuous layer re-rasterization
-          if (heroBg) {
-            heroBg.style.transform = `translate3d(0, ${(scrollY * 0.18).toFixed(1)}px, 0)`;
-          }
-        } else {
-          // DESKTOP: Full dual-layer luxury sinking parallax
-          if (heroBg) {
-            heroBg.style.transform = `translate3d(0, ${(scrollY * 0.35).toFixed(1)}px, 0)`;
-          }
-          if (heroContent) {
-            const progress = Math.min(1, scrollY / (heroHeight * 0.75));
-            heroContent.style.transform = `translate3d(0, ${(scrollY * 0.22).toFixed(1)}px, 0)`;
-            heroContent.style.opacity = Math.max(0, 1 - progress).toFixed(2);
-          }
-        }
-      }
-      isTicking = false;
-    }
-
-    function onScroll() {
-      if (!isTicking && isHeroVisible) {
-        requestAnimationFrame(renderParallax);
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Sync with Lenis smooth scroll
-    if (window.__lenis) {
-      window.__lenis.on('scroll', onScroll);
-    } else {
-      window.addEventListener('load', () => {
-        if (window.__lenis) window.__lenis.on('scroll', onScroll);
-      });
-    }
-
-    renderParallax();
-  })();
+  initHomeHeroParallax();
 </script>

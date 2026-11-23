@@ -3,15 +3,13 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import EventSectorGrid from '../components/EventSectorGrid.astro';
 import FooterCTA from '../components/FooterCTA.astro';
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Event, Wedding & Gathering", "item": `${siteBase}/event/` }
-  ]
-};
+import { buildBreadcrumbSchema, getSiteBase } from '../lib/seo';
+
+const siteBase = getSiteBase(Astro.site);
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Event, Wedding & Gathering", path: "/event/" }
+]);
 ---
 
 <Layout 
@@ -122,51 +120,13 @@ const breadcrumbSchema = {
   </main>
 </Layout>
 
-<style>
-  /* Monospaced tag font helper */
-  .font-mono-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-</style>
+<script>
+  import { initHeroLayerParallax } from '../scripts/heroParallax';
 
-<!-- ========================================================================= -->
-<!-- JAVASCRIPT: HERO PARALLAX TRANSLATE-Y ENGINE                              -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initEventHeroParallax() {
-    const heroSection = document.getElementById('event-hero');
-    const parallaxLayer = document.getElementById('event-hero-parallax-layer');
-    if (!heroSection || !parallaxLayer) return;
-
-    let isTicking = false;
-
-    function updateHeroParallax() {
-      const scrollY = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-
-      if (scrollY <= heroHeight + 50) {
-        const translateY = scrollY * 0.32;
-        parallaxLayer.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateHeroParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    updateHeroParallax();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEventHeroParallax);
-  } else {
-    initEventHeroParallax();
-  }
+  initHeroLayerParallax({
+    sectionId: 'event-hero',
+    layerId: 'event-hero-parallax-layer',
+    speed: 0.32,
+    bufferPx: 50,
+  });
 </script>

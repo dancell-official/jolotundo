@@ -218,102 +218,16 @@ const upgradePackages = [
 <!-- ========================================================================= -->
 <!-- STACKING SCRIPT: DEPTH ILLUSION & CLICK TO EXPAND                         -->
 <!-- ========================================================================= -->
-<script is:inline>
-  function initUpgradeStack() {
-    const section = document.getElementById('paket-upgrade');
-    const wrappers = document.querySelectorAll('.upgrade-card-wrapper');
-    if (!section || !wrappers.length) return;
+<script>
+  import { initCardStack } from '../scripts/cardStack';
 
-    // Handle smooth clicking on card headers
-    wrappers.forEach((wrapper, idx) => {
-      wrapper.addEventListener('click', (e) => {
-        const isLink = e.target.closest('a');
-        if (isLink) return;
-
-        // @ts-ignore
-        const lenis = window.__lenis;
-        const targetTop = wrapper.offsetTop - (idx * 32) - 80;
-        
-        if (lenis) {
-          lenis.scrollTo(wrapper, { offset: -(idx * 32) - 80, duration: 0.8 });
-        } else {
-          window.scrollTo({
-            top: targetTop,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-
-    // Tactile depth scroll handler: subtle scale down on buried cards
-    function onScrollStack() {
-      wrappers.forEach((wrapper, idx) => {
-        if (idx === wrappers.length - 1) return; // Don't scale last card
-
-        const nextWrapper = wrappers[idx + 1];
-        if (!nextWrapper) return;
-
-        const nextRect = nextWrapper.getBoundingClientRect();
-        const wrapperRect = wrapper.getBoundingClientRect();
-        
-        const cardInner = wrapper.querySelector('.upgrade-card');
-        if (!cardInner) return;
-
-        // When next card approaches or overlaps, scale down slightly & dim
-        if (nextRect.top <= wrapperRect.bottom) {
-          const overlap = wrapperRect.bottom - nextRect.top;
-          const maxOverlap = wrapperRect.height;
-          const progress = Math.max(0, Math.min(1, overlap / (maxOverlap * 0.75)));
-
-          const scale = 1 - progress * 0.035; // 1.0 -> 0.965
-          const brightness = 1 - progress * 0.22; // 1.0 -> 0.78
-          
-          cardInner.style.transform = `scale(${scale.toFixed(4)})`;
-          cardInner.style.filter = `brightness(${brightness.toFixed(3)})`;
-        } else {
-          cardInner.style.transform = 'scale(1)';
-          cardInner.style.filter = 'brightness(1)';
-        }
-      });
-    }
-
-    let isTicking = false;
-    let isIntersecting = false;
-
-    function handleScroll() {
-      if (!isTicking && isIntersecting) {
-        requestAnimationFrame(() => {
-          onScrollStack();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        isIntersecting = entry.isIntersecting;
-        if (isIntersecting) {
-          onScrollStack();
-        }
-      });
-    }, {
-      root: null,
-      threshold: 0,
-      rootMargin: "200px 0px"
-    });
-
-    observer.observe(section);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Initial run
-    onScrollStack();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initUpgradeStack);
-  } else {
-    initUpgradeStack();
-  }
+  initCardStack({
+    sectionId: 'paket-upgrade',
+    wrapperSelector: '.upgrade-card-wrapper',
+    innerSelector: '.upgrade-card',
+    brightnessFactor: 0.22,
+    enableClickScroll: true,
+    clickOffsetPerIndex: 32,
+    clickOffsetBase: 80,
+  });
 </script>

@@ -178,105 +178,19 @@ const advantages = [
 <!-- ========================================================================= -->
 <!-- JAVASCRIPT: TACTILE STACK SCALING ENGINE                                  -->
 <!-- ========================================================================= -->
-<script is:inline>
-  function initUspStack() {
-    const section = document.getElementById('keunggulan');
-    const wrappers = document.querySelectorAll('.usp-card-wrapper');
-    if (!section || !wrappers.length) return;
+<script>
+  import { initCardStack } from '../scripts/cardStack';
 
-    // Handle smooth clicking on card headers
-    wrappers.forEach((wrapper, idx) => {
-      wrapper.addEventListener('click', (e) => {
-        const isLink = e.target.closest('a');
-        if (isLink) return;
-
-        // @ts-ignore
-        const lenis = window.__lenis;
-        const isMobile = window.innerWidth < 640;
-        const offsetVal = isMobile ? (idx * 10) + 60 : (idx * 30) + 80;
-        const targetTop = wrapper.offsetTop - offsetVal;
-        
-        if (lenis) {
-          lenis.scrollTo(wrapper, { offset: -offsetVal, duration: 0.8 });
-        } else {
-          window.scrollTo({
-            top: targetTop,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-
-    // Tactile depth scroll handler: subtle scale down on buried cards
-    function onScrollStack() {
-      wrappers.forEach((wrapper, idx) => {
-        if (idx === wrappers.length - 1) return; // Don't scale last card
-
-        const nextWrapper = wrappers[idx + 1];
-        if (!nextWrapper) return;
-
-        const nextRect = nextWrapper.getBoundingClientRect();
-        const wrapperRect = wrapper.getBoundingClientRect();
-        
-        const cardInner = wrapper.querySelector('.usp-card');
-        if (!cardInner) return;
-
-        // When next card approaches or overlaps, scale down slightly & shift shadow
-        if (nextRect.top <= wrapperRect.bottom) {
-          const overlap = wrapperRect.bottom - nextRect.top;
-          const maxOverlap = wrapperRect.height;
-          const progress = Math.max(0, Math.min(1, overlap / (maxOverlap * 0.75)));
-
-          const scale = 1 - progress * 0.035; // 1.0 -> 0.965
-          const opacity = 1 - progress * 0.15; // 1.0 -> 0.85
-          
-          cardInner.style.transform = `scale(${scale.toFixed(4)})`;
-          cardInner.style.opacity = `${opacity.toFixed(3)}`;
-        } else {
-          cardInner.style.transform = 'scale(1)';
-          cardInner.style.opacity = '1';
-        }
-      });
-    }
-
-    let isTicking = false;
-    let isIntersecting = false;
-
-    function handleScroll() {
-      if (!isTicking && isIntersecting) {
-        requestAnimationFrame(() => {
-          onScrollStack();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        isIntersecting = entry.isIntersecting;
-        if (isIntersecting) {
-          onScrollStack();
-        }
-      });
-    }, {
-      root: null,
-      threshold: 0,
-      rootMargin: "200px 0px"
-    });
-
-    observer.observe(section);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Initial run
-    onScrollStack();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initUspStack);
-  } else {
-    initUspStack();
-  }
+  initCardStack({
+    sectionId: 'keunggulan',
+    wrapperSelector: '.usp-card-wrapper',
+    innerSelector: '.usp-card',
+    opacityFactor: 0.15,
+    enableClickScroll: true,
+    clickOffsetPerIndex: 30,
+    clickOffsetBase: 80,
+    mobileClickOffsetPerIndex: 10,
+    mobileClickOffsetBase: 60,
+  });
 </script>
 

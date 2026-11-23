@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar.astro';
 import FooterCTA from '../../components/FooterCTA.astro';
 import EventPreviewGallery from '../../components/EventPreviewGallery.astro';
 import eventDetails from '../../data/eventDetails.json';
+import { buildBreadcrumbSchema, getSiteBase } from '../../lib/seo';
 
 export async function getStaticPaths() {
   return eventDetails.map((venue, idx) => {
@@ -23,20 +24,16 @@ const waPhone = venue.contactWa || "6282249829998";
 const waMessage = `Halo Admin Jolotundo Glamping & Culture, saya ingin konsultasi dan informasi ketersediaan untuk *${venue.name}*.`;
 const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
 
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const siteBase = getSiteBase(Astro.site);
 const rawEventDesc = `${venue.name} di Jolotundo Bajulan, Nganjuk. ${venue.category} sejuk 800 MDPL, mulai ${venue.priceStarting}. Reservasi sekarang.`;
 const seoDesc = rawEventDesc.length > 155
   ? `${venue.name} di Jolotundo Bajulan, Nganjuk. Venue sejuk 800 MDPL, mulai ${venue.priceStarting}.`
   : rawEventDesc;
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Event & Gathering", "item": `${siteBase}/event/` },
-    { "@type": "ListItem", "position": 3, "name": venue.name, "item": `${siteBase}/event/${venue.id}/` }
-  ]
-};
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Event & Gathering", path: "/event/" },
+  { name: venue.name, path: `/event/${venue.id}/` }
+]);
 ---
 
 <Layout 
@@ -414,128 +411,21 @@ const breadcrumbSchema = {
   <FooterCTA />
 </Layout>
 
-<style>
-  .font-mono-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-</style>
+<script>
+  import { initHeroLayerParallax } from '../../scripts/heroParallax';
+  import { initCardStack } from '../../scripts/cardStack';
 
-<!-- ========================================================================= -->
-<!-- PARALLAX TRANSLATE-Y ENGINE FOR HERO (GPU Hardware-Accelerated)          -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initEventDetailHeroParallax() {
-    const heroSection = document.getElementById('event-detail-hero');
-    const parallaxLayer = document.getElementById('hero-parallax-layer');
-    if (!heroSection || !parallaxLayer) return;
-
-    let isTicking = false;
-
-    function updateParallax() {
-      const scrollY = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-
-      if (scrollY <= heroHeight + 50) {
-        const translateY = scrollY * 0.32;
-        parallaxLayer.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    updateParallax();
-  }
-
-  function initAll() {
-    initEventDetailHeroParallax();
-    initEventCardStack();
-  }
-
-  // Tactile depth stacking controller for description cards
-  function initEventCardStack() {
-    const container = document.getElementById('event-stack-container');
-    const wrappers = document.querySelectorAll('.event-stack-wrapper');
-    if (!container || !wrappers.length) return;
-
-    // Smooth click on any visible stacked header to scroll smoothly to that card
-    wrappers.forEach((wrapper, idx) => {
-      wrapper.addEventListener('click', (e) => {
-        const isLink = e.target.closest('a');
-        if (isLink) return;
-
-        // @ts-ignore
-        const lenis = window.__lenis;
-        const targetTop = wrapper.offsetTop - (idx * 26) - 90;
-
-        if (lenis) {
-          lenis.scrollTo(wrapper, { offset: -(idx * 26) - 90, duration: 0.8 });
-        } else {
-          window.scrollTo({
-            top: targetTop,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-
-    // Tactile depth scroll handler: subtle scale & brightness on cards that are overlapped
-    function onScrollStack() {
-      wrappers.forEach((wrapper, idx) => {
-        if (idx === wrappers.length - 1) return; // Don't scale the last card
-
-        const nextWrapper = wrappers[idx + 1];
-        if (!nextWrapper) return;
-
-        const nextRect = nextWrapper.getBoundingClientRect();
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const cardInner = wrapper.querySelector('.event-stack-card');
-        if (!cardInner) return;
-
-        if (nextRect.top <= wrapperRect.bottom) {
-          const overlap = wrapperRect.bottom - nextRect.top;
-          const maxOverlap = wrapperRect.height;
-          const progress = Math.max(0, Math.min(1, overlap / (maxOverlap * 0.75)));
-
-          const scale = 1 - progress * 0.035; // 1.0 -> 0.965
-          const brightness = 1 - progress * 0.12; // 1.0 -> 0.88
-
-          cardInner.style.transform = `scale(${scale.toFixed(4)})`;
-          cardInner.style.filter = `brightness(${brightness.toFixed(3)})`;
-        } else {
-          cardInner.style.transform = 'scale(1)';
-          cardInner.style.filter = 'brightness(1)';
-        }
-      });
-    }
-
-    let isTicking = false;
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          onScrollStack();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    onScrollStack();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
+  initHeroLayerParallax({
+    sectionId: 'event-detail-hero',
+    layerId: 'hero-parallax-layer',
+    speed: 0.32,
+    bufferPx: 50,
+  });
+  initCardStack({
+    containerId: 'event-stack-container',
+    wrapperSelector: '.event-stack-wrapper',
+    innerSelector: '.event-stack-card',
+    enableClickScroll: true,
+  });
 </script>
 

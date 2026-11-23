@@ -1,9 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-
 import tailwindcss from '@tailwindcss/vite';
-
-import react from '@astrojs/react';
 
 const siteUrl = process.env.SITE_URL || 'https://jolotundoglamping.com';
 
@@ -16,7 +13,5 @@ export default defineConfig({
     server: {
       allowedHosts: true
     }
-  },
-
-  integrations: [react()]
+  }
 });

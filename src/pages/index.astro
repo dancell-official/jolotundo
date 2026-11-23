@@ -10,19 +10,9 @@ import ReviewsGoogle from '../components/ReviewsGoogle.astro';
 import FaqSection from '../components/FaqSection.astro';
 import FooterCTA from '../components/FooterCTA.astro';
 import faqs from '../data/faqs.json';
+import { buildFaqSchema } from '../lib/seo';
 
-const faqSchema = {
-	"@context": "https://schema.org",
-	"@type": "FAQPage",
-	"mainEntity": faqs.map((item) => ({
-		"@type": "Question",
-		"name": item.question,
-		"acceptedAnswer": {
-			"@type": "Answer",
-			"text": item.answer
-		}
-	}))
-};
+const faqSchema = buildFaqSchema(faqs);
 ---
 
 <Layout

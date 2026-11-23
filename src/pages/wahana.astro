@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import FooterCTA from '../components/FooterCTA.astro';
+import '../styles/catalog-cards.css';
+import { buildBreadcrumbSchema, getSiteBase } from '../lib/seo';
 
 // Kategori Filter (1:1 Mirip Style GoUncharted di Akomodasi)
 const categories = [
@@ -94,15 +96,11 @@ const activities = [
     gridClass: "grid-col-5 camp-card-hero"
   }
 ];
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Wahana & Rekreasi", "item": `${siteBase}/wahana/` }
-  ]
-};
+const siteBase = getSiteBase(Astro.site);
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Wahana & Rekreasi", path: "/wahana/" }
+]);
 ---
 
 <Layout 
@@ -339,280 +337,18 @@ const breadcrumbSchema = {
 <!-- ========================================================================= -->
 <!-- STYLES: 1:1 GOUNCHARTED CARD GRID & SPOTLIGHT (IDENTIK DENGAN AKOMODASI) -->
 <!-- ========================================================================= -->
-<style>
-  /* Grid Column Architecture: 1 Column on Mobile, Multi-Column on Desktop (>= 1024px) */
-  .grid-col-half,
-  .grid-col-full,
-  .grid-col-7,
-  .grid-col-5 {
-    grid-column: span 1 / span 1;
-  }
+<script>
+  import { initHeroLayerParallax } from '../scripts/heroParallax';
+  import { initCatalogGrid } from '../scripts/catalogFilter';
 
-  @media (min-width: 1024px) {
-    .grid-col-half {
-      grid-column: span 6 / span 6;
-    }
-    .grid-col-full {
-      grid-column: span 12 / span 12;
-    }
-    .grid-col-7 {
-      grid-column: span 7 / span 7;
-    }
-    .grid-col-5 {
-      grid-column: span 5 / span 5;
-    }
-  }
-
-  /* Iron-clad card dimensions: identical to camping & glamping */
-  .camp-card {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    min-height: 480px;
-    height: 480px;
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    touch-action: manipulation;
-  }
-
-  @media (min-width: 640px) {
-    .camp-card {
-      min-height: 540px;
-      height: 540px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .camp-card {
-      min-height: 600px;
-      height: 600px;
-    }
-    .camp-card.camp-card-hero {
-      min-height: 620px;
-      height: 620px;
-    }
-    .camp-card.camp-card-panorama {
-      min-height: 560px;
-      height: 560px;
-    }
-  }
-
-  /* Image Lock */
-  .camp-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  /* Desktop spotlight: when any card is hovered, other cards smoothly blur, dim, and scale down */
-  @media (hover: hover) and (pointer: fine) {
-    #activity-catalog-grid:has(.camp-card:hover) .camp-card:not(:hover) {
-      filter: blur(3px) brightness(0.75);
-      opacity: 0.42;
-      transform: scale3d(0.985, 0.985, 1);
-    }
-  }
-
-  /* Active or hovered card elevation */
-  @media (hover: hover) and (pointer: fine) {
-    .camp-card:hover {
-      transform: scale3d(1.025, 1.025, 1);
-      z-index: 20;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
-      border-color: rgba(216, 195, 158, 0.6);
-      filter: blur(0) brightness(1);
-      opacity: 1;
-    }
-  }
-
-  .camp-card.is-active {
-    border-color: rgba(216, 195, 158, 0.6);
-    opacity: 1;
-  }
-
-  /* Title upward translation */
-  .camp-title-wrap {
-    transform: translate3d(0, 0, 0);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
-  }
-
-  .camp-card:hover .camp-title-wrap,
-  .camp-card.is-active .camp-title-wrap {
-    transform: translate3d(0, -10px, 0);
-  }
-
-  /* Drawer base state (collapsible 0fr -> 1fr slide up) */
-  .camp-drawer {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.45s ease;
-    will-change: grid-template-rows, opacity;
-  }
-
-  .camp-card:hover .camp-drawer,
-  .camp-card.is-active .camp-drawer {
-    grid-template-rows: 1fr;
-    opacity: 1;
-  }
-
-  .camp-drawer-inner {
-    overflow: hidden;
-  }
-
-  .camp-drawer-content {
-    transform: translate3d(0, 24px, 0);
-    opacity: 0;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.5s ease;
-    will-change: transform, opacity;
-  }
-
-  .camp-card:hover .camp-drawer-content,
-  .camp-card.is-active .camp-drawer-content {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
-  }
-
-  .camp-card:hover .camp-img,
-  .camp-card.is-active .camp-img {
-    transform: scale3d(1.06, 1.06, 1);
-  }
-</style>
-
-<!-- ========================================================================= -->
-<!-- JAVASCRIPT: HERO PARALLAX, CATEGORY FILTER, MOBILE TOUCH & SMOOTH SCROLL -->
-<!-- ========================================================================= -->
-<script is:inline>
-  // 1. FULLSCREEN HERO PURE TRANSLATE-Y PARALLAX ENGINE (Hardware-Accelerated via rAF)
-  function initWahanaHeroParallax() {
-    const heroSection = document.getElementById('wahana-hero');
-    const parallaxLayer = document.getElementById('wahana-hero-parallax-layer');
-    if (!heroSection || !parallaxLayer) return;
-
-    let isTicking = false;
-
-    function updateHeroParallax() {
-      const scrollY = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-
-      if (scrollY <= heroHeight + 50) {
-        const translateY = scrollY * 0.32;
-        parallaxLayer.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateHeroParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    updateHeroParallax();
-  }
-
-  // 2. ACTIVITY CATALOG FILTER & MOBILE TOUCH AUTO-REVEAL
-  function initActivityCatalog() {
-    const grid = document.getElementById('activity-catalog-grid');
-    if (!grid) return;
-
-    const cards = Array.from(grid.querySelectorAll('.camp-card'));
-    const filterBtns = Array.from(document.querySelectorAll('.category-filter-btn'));
-
-    // Category Filter Buttons
-    filterBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const selectedCat = btn.getAttribute('data-category');
-
-        filterBtns.forEach((b) => {
-          b.classList.remove('font-bold', 'text-[#141110]', 'border-[#141110]');
-          b.classList.add('text-[#141110]/45', 'border-transparent');
-        });
-        btn.classList.add('font-bold', 'text-[#141110]', 'border-[#141110]');
-        btn.classList.remove('text-[#141110]/45', 'border-transparent');
-
-        cards.forEach((card) => {
-          const cardCat = card.getAttribute('data-category');
-          if (selectedCat === 'all' || cardCat === selectedCat) {
-            card.style.display = '';
-            requestAnimationFrame(() => {
-              card.style.opacity = '1';
-              card.style.transform = 'scale(1)';
-            });
-          } else {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.96)';
-            setTimeout(() => {
-              if (card.style.opacity === '0') {
-                card.style.display = 'none';
-              }
-            }, 250);
-          }
-        });
-      });
-    });
-
-    // Mobile auto-reveal on scroll & anchor propagation guard
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches || ('ontouchstart' in window);
-    if (isMobile && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const card = entry.target;
-          if (entry.isIntersecting) {
-            card.classList.add('is-active');
-          } else {
-            card.classList.remove('is-active');
-          }
-        });
-      }, {
-        root: null,
-        rootMargin: '-8% 0px -12% 0px',
-        threshold: 0.18
-      });
-      cards.forEach((card) => observer.observe(card));
-    }
-
-    cards.forEach((card) => {
-      card.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', (e) => e.stopPropagation());
-      });
-      card.addEventListener('click', (e) => {
-        if (window.innerWidth < 1024) {
-          const target = e.target;
-          if (target.tagName.toLowerCase() === 'a' || target.closest('a')) {
-            return;
-          }
-          const isCurrentlyActive = card.classList.contains('is-active');
-          cards.forEach((c) => c.classList.remove('is-active'));
-          if (!isCurrentlyActive) {
-            card.classList.add('is-active');
-          }
-        }
-      });
-    });
-  }
-
-  function initAll() {
-    initWahanaHeroParallax();
-    initActivityCatalog();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
+  initHeroLayerParallax({
+    sectionId: 'wahana-hero',
+    layerId: 'wahana-hero-parallax-layer',
+    speed: 0.32,
+    bufferPx: 50,
+  });
+  initCatalogGrid({
+    gridId: 'activity-catalog-grid',
+    onlyToggleBelowDesktop: true,
+  });
 </script>

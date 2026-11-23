@@ -108,60 +108,9 @@ import siteData from '../data/siteData.json';
 </section>
 
 <!-- Smooth GoUncharted Accordion Toggle Script -->
-<script is:inline>
-  function initFaqAccordion() {
-    const triggers = document.querySelectorAll('.faq-trigger');
-    if (!triggers.length) return;
+<script>
+  import { initFaqAccordion } from '../scripts/faqAccordion';
 
-    triggers.forEach((trigger) => {
-      trigger.addEventListener('click', () => {
-        const item = trigger.closest('.faq-item');
-        if (!item) return;
-
-        const answerWrapper = item.querySelector('.faq-answer-wrapper');
-        const vBar = item.querySelector('.faq-v-bar');
-        const iconBox = item.querySelector('.faq-icon-box');
-        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-
-        if (isExpanded) {
-          // Collapse to "+"
-          trigger.setAttribute('aria-expanded', 'false');
-          if (answerWrapper) {
-            answerWrapper.style.maxHeight = '0px';
-            answerWrapper.style.opacity = '0';
-          }
-          if (vBar) {
-            vBar.classList.remove('scale-y-0', 'rotate-90', 'opacity-0');
-            vBar.classList.add('scale-y-100', 'rotate-0', 'opacity-100');
-          }
-          if (iconBox) {
-            iconBox.classList.remove('rotate-180');
-            iconBox.classList.add('rotate-0');
-          }
-        } else {
-          // Expand to "—"
-          trigger.setAttribute('aria-expanded', 'true');
-          if (answerWrapper) {
-            answerWrapper.style.maxHeight = answerWrapper.scrollHeight + 50 + 'px';
-            answerWrapper.style.opacity = '1';
-          }
-          if (vBar) {
-            vBar.classList.remove('scale-y-100', 'rotate-0', 'opacity-100');
-            vBar.classList.add('scale-y-0', 'rotate-90', 'opacity-0');
-          }
-          if (iconBox) {
-            iconBox.classList.remove('rotate-0');
-            iconBox.classList.add('rotate-180');
-          }
-        }
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFaqAccordion);
-  } else {
-    initFaqAccordion();
-  }
+  initFaqAccordion();
 </script>
 

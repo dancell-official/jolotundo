@@ -1,0 +1,218 @@
+---
+import type { GalleryImageItem } from '../../data/galleries';
+
+export interface GallerySpecItem {
+  value: string;
+  label: string;
+}
+
+export interface GalleryTopBar {
+  leftText: string;
+  rightDesktopText: string;
+  rightMobileText?: string;
+  pulseDotClass?: string;
+}
+
+interface Props {
+  sectionId: string;
+  viewportId: string;
+  windowId: string;
+  trackId: string;
+  progressBarId: string;
+  images: GalleryImageItem[];
+  scrollHeightVh: number;
+  title: string;
+  subtitle: string;
+  specs: [GallerySpecItem, GallerySpecItem, GallerySpecItem];
+  priceValue: string;
+  priceLabel: string;
+  priceLabelFirst?: boolean;
+  ctaLabel: string;
+  ctaHref: string;
+  topBar?: GalleryTopBar;
+  sectionBorderClass?: string;
+  viewportPaddingClass?: string;
+}
+
+const {
+  sectionId,
+  viewportId,
+  windowId,
+  trackId,
+  progressBarId,
+  images,
+  scrollHeightVh,
+  title,
+  subtitle,
+  specs,
+  priceValue,
+  priceLabel,
+  priceLabelFirst = false,
+  ctaLabel,
+  ctaHref,
+  topBar,
+  sectionBorderClass = '',
+  viewportPaddingClass = 'h-screen py-5 sm:py-7 lg:py-8',
+} = Astro.props;
+---
+
+<section
+  id={sectionId}
+  data-horizontal-gallery
+  data-track-id={trackId}
+  data-progress-id={progressBarId}
+  data-window-id={windowId}
+  class={`relative bg-[#f4efe6] text-[#141110] select-none ${sectionBorderClass}`}
+  style={`height: ${scrollHeightVh}vh;`}
+>
+  <div
+    id={viewportId}
+    class={`sticky top-0 w-full overflow-hidden flex flex-col justify-between px-4 sm:px-8 lg:px-14 xl:px-20 select-none z-10 ${viewportPaddingClass}`}
+  >
+    {topBar && (
+      <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#141110]/15 w-full max-w-[1680px] mx-auto shrink-0">
+        <div class="flex items-center gap-2.5 text-xs font-mono-tag text-[#141110]/70 tracking-widest uppercase">
+          <span class="w-1.5 h-1.5 bg-[#141110]"></span>
+          <span>{topBar.leftText}</span>
+        </div>
+        <div class="flex items-center gap-2 text-[11px] font-mono-tag text-[#141110]/60 uppercase tracking-widest">
+          {topBar.pulseDotClass && (
+            <span class={`inline-block w-1.5 h-1.5 animate-pulse ${topBar.pulseDotClass}`}></span>
+          )}
+          <span class="hidden sm:inline">{topBar.rightDesktopText}</span>
+          {topBar.rightMobileText && <span class="sm:hidden">{topBar.rightMobileText}</span>}
+        </div>
+      </div>
+    )}
+
+    <div id={windowId} class="relative w-full my-auto overflow-hidden py-2 sm:py-4">
+      <div
+        id={trackId}
+        class="flex items-center gap-4 sm:gap-6 lg:gap-8 will-change-transform"
+        style="transform: translate3d(0, 0px, 0);"
+      >
+        {images.map((img, i) => (
+          <div class="gallery-card shrink-0 relative h-[48vh] sm:h-[54vh] lg:h-[58vh] aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-[#141110] border border-[#141110]/20 shadow-xl group cursor-pointer transform-gpu will-change-transform contain-paint">
+            <img
+              src={img.src}
+              alt={img.caption}
+              class="w-full h-full object-cover object-center transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+              loading={i < 3 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/20 pointer-events-none"></div>
+            <div class="absolute top-4 left-4 z-10 pointer-events-none">
+              <span class="text-[10px] font-mono-tag tracking-widest text-[#d8c39e] uppercase px-2.5 py-1 bg-black/75 backdrop-blur-md border border-white/10 font-bold">
+                {String(i + 1).padStart(2, '0')} // {String(images.length).padStart(2, '0')}
+              </span>
+            </div>
+            <div class="absolute bottom-4 sm:bottom-5 left-4 sm:left-5 right-4 sm:right-5 z-10 pointer-events-none">
+              <span class="text-xs sm:text-sm font-bold font-sans text-white uppercase tracking-tight block drop-shadow leading-snug">
+                {img.caption}
+              </span>
+              <span class="text-[10px] font-mono-tag text-[#d8c39e] uppercase tracking-wider block mt-0.5">
+                {img.subtitle}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="w-full max-w-[1680px] mx-auto shrink-0 flex flex-col gap-3 pt-1">
+      <div class="relative w-full h-[2px] bg-[#141110]/15 overflow-hidden">
+        <div
+          id={progressBarId}
+          class="absolute top-0 left-0 h-full w-full bg-[#141110] transform-gpu origin-left will-change-transform"
+          style="transform: scaleX(0.15);"
+        ></div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+        <div class="flex flex-wrap items-center gap-4 sm:gap-8">
+          <div>
+            <h4 class="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-[#141110] uppercase font-sans leading-none">
+              {title}
+            </h4>
+            <span class="text-[10px] font-mono-tag text-[#141110]/60 uppercase tracking-widest block mt-0.5">
+              {subtitle}
+            </span>
+          </div>
+
+          <div class="hidden sm:block h-8 w-[1px] bg-[#141110]/15"></div>
+
+          <div class="flex items-center gap-4 sm:gap-6 text-xs font-mono-tag text-[#141110]">
+            <div>
+              <span class="text-xs sm:text-sm font-bold block">{specs[0].value}</span>
+              <span class="text-[9px] text-[#141110]/50 uppercase tracking-widest block">{specs[0].label}</span>
+            </div>
+
+            <div class="h-6 w-[1px] bg-[#141110]/15"></div>
+
+            <div>
+              <span class="text-xs sm:text-sm font-bold block">{specs[1].value}</span>
+              <span class="text-[9px] text-[#141110]/50 uppercase tracking-widest block">{specs[1].label}</span>
+            </div>
+
+            <div class="h-6 w-[1px] bg-[#141110]/15 hidden xs:block"></div>
+
+            <div class="hidden xs:block">
+              <span class="text-xs sm:text-sm font-bold block">{specs[2].value}</span>
+              <span class="text-[9px] text-[#141110]/50 uppercase tracking-widest block">{specs[2].label}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-5 shrink-0">
+          {priceLabelFirst ? (
+            <div class="text-right">
+              <span class="text-[10px] font-mono-tag text-[#141110]/50 uppercase tracking-widest block">
+                {priceLabel}
+              </span>
+              <span class="text-lg sm:text-xl font-bold font-mono-tag text-[#141110] leading-none">
+                {priceValue}
+              </span>
+            </div>
+          ) : (
+            <div class="text-left sm:text-right">
+              <span class="text-sm sm:text-base lg:text-lg font-bold font-mono-tag text-[#141110] block tracking-tight">
+                {priceValue}
+              </span>
+              <span class="text-[9px] font-mono-tag text-[#141110]/50 uppercase tracking-wider block">
+                {priceLabel}
+              </span>
+            </div>
+          )}
+
+          <a
+            href={ctaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={
+              priceLabelFirst
+                ? 'inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#141110] text-[#f4efe6] text-xs font-mono-tag font-bold uppercase tracking-wider hover:bg-black transition-colors shrink-0'
+                : 'px-5 sm:px-6 py-2.5 sm:py-3 bg-[#141110] hover:bg-black text-[#f4efe6] font-mono-tag text-xs font-bold uppercase tracking-wider transition-all duration-200 border border-[#141110] hover:shadow-[0_8px_20px_rgba(20,17,16,0.3)] shrink-0 flex items-center gap-2'
+            }
+          >
+            <span>{ctaLabel}</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initHorizontalGallery } from '../../scripts/horizontalGallery';
+
+  document.querySelectorAll<HTMLElement>('[data-horizontal-gallery]').forEach((el) => {
+    const sectionId = el.id;
+    const trackId = el.dataset.trackId;
+    const progressBarId = el.dataset.progressId;
+    const windowId = el.dataset.windowId;
+    if (sectionId && trackId && progressBarId && windowId) {
+      initHorizontalGallery({ sectionId, trackId, progressBarId, windowId });
+    }
+  });
+</script>

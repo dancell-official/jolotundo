@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import siteData from '../data/siteData.json';
+import { buildBreadcrumbSchema, getSiteBase } from '../lib/seo';
 
 const generalPhone = siteData.brand.whatsappDisplay || "0822 2950 0998";
 const generalWa = siteData.brand.whatsapp || "6282229500998";
@@ -10,15 +11,11 @@ const generalWaUrl = `https://wa.me/${generalWa}?text=${encodeURIComponent("Halo
 const outboundPhone = siteData.brand.whatsappOutboundDisplay || "0822 4982 9998";
 const outboundWa = siteData.brand.whatsappOutbound || "6282249829998";
 const outboundWaUrl = `https://wa.me/${outboundWa}?text=${encodeURIComponent("Halo Admin Dan Group Jolotundo, saya ingin konsultasi paket outbound / gathering instansi.")}`;
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Kontak Kami", "item": `${siteBase}/kontak/` }
-  ]
-};
+const siteBase = getSiteBase(Astro.site);
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Kontak Kami", path: "/kontak/" }
+]);
 ---
 
 <Layout
@@ -168,68 +165,8 @@ const breadcrumbSchema = {
 
 </Layout>
 
-<!-- Form Auto-Routing Logic to Correct WhatsApp Number -->
-<script is:inline>
-  function initContactForm() {
-    const form = document.getElementById('contact-enquiry-form');
-    const categorySelect = document.getElementById('form-category');
-    const btnLabel = document.getElementById('btn-label-text');
-    if (!form || !categorySelect) return;
+<script>
+  import { initContactForm } from '../scripts/contactForm';
 
-    // Numbers
-    const generalWaNumber = '6282229500998';
-    const outboundWaNumber = '6282249829998';
-
-    function updateButtonDestination() {
-      const isOutbound = categorySelect.value === 'outbound';
-      if (btnLabel) {
-        btnLabel.textContent = isOutbound 
-          ? 'Hubungi WhatsApp Khusus Outbound (0822 4982 9998)' 
-          : 'Hubungi WhatsApp Umum (0822 2950 0998)';
-      }
-    }
-
-    categorySelect.addEventListener('change', updateButtonDestination);
-    updateButtonDestination();
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const catValue = categorySelect.value;
-      const isOutbound = catValue === 'outbound';
-      const targetNumber = isOutbound ? outboundWaNumber : generalWaNumber;
-
-      const catText = categorySelect.options[categorySelect.selectedIndex]?.text || 'Reservasi Kawasan';
-      const dateVal = document.getElementById('form-date')?.value.trim() || 'Fleksibel / Belum Ditentukan';
-      const guestsVal = document.getElementById('form-guests')?.value.trim() || '-';
-      const nameVal = document.getElementById('form-name')?.value.trim() || 'Tamu Jolotundo';
-      const notesVal = document.getElementById('form-notes')?.value.trim() || '-';
-
-      const waMessage = 
-`Halo Admin ${isOutbound ? 'Outbound & Gathering Dan Group' : 'Jolotundo Glamping'}, saya ingin konsultasi:
-
-• Kategori: ${catText}
-• Rencana Tanggal: ${dateVal}
-• Jumlah Tamu: ${guestsVal}
-• Nama / Instansi: ${nameVal}
-• Catatan: ${notesVal}
-
-Mohon informasi jadwal ketersediaan dan penawarannya. Terima kasih!`;
-
-      const targetUrl = `https://wa.me/${targetNumber}?text=${encodeURIComponent(waMessage)}`;
-      window.open(targetUrl, '_blank', 'noopener,noreferrer');
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initContactForm);
-  } else {
-    initContactForm();
-  }
+  initContactForm();
 </script>
-
-<style>
-  .font-mono-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-</style>

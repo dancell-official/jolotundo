@@ -1,0 +1,172 @@
+/* Shared Editorial Catalog Grid & Card Drawer Styles (akomodasi & wahana) */
+
+.catalog-header {
+  padding-top: 180px;
+  padding-bottom: 56px;
+}
+@media (min-width: 640px) {
+  .catalog-header {
+    padding-top: 220px;
+    padding-bottom: 64px;
+  }
+}
+@media (min-width: 1024px) {
+  .catalog-header {
+    padding-top: 250px;
+    padding-bottom: 72px;
+  }
+}
+
+.catalog-section {
+  padding-top: 32px;
+  padding-bottom: 96px;
+}
+@media (min-width: 640px) {
+  .catalog-section {
+    padding-top: 48px;
+    padding-bottom: 128px;
+  }
+}
+
+/* Grid Column Architecture: 1 Column on Mobile & Tablet (< 1024px), Multi-Column on Desktop (>= 1024px) */
+.grid-col-half,
+.grid-col-full,
+.grid-col-7,
+.grid-col-5 {
+  grid-column: span 1 / span 1;
+}
+
+@media (min-width: 1024px) {
+  .grid-col-half {
+    grid-column: span 6 / span 6;
+  }
+  .grid-col-full {
+    grid-column: span 12 / span 12;
+  }
+  .grid-col-7 {
+    grid-column: span 7 / span 7;
+  }
+  .grid-col-5 {
+    grid-column: span 5 / span 5;
+  }
+}
+
+/* Card dimensions & transitions across breakpoints */
+.camp-card {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 480px;
+  height: 480px;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  touch-action: manipulation;
+}
+
+@media (min-width: 640px) {
+  .camp-card {
+    min-height: 540px;
+    height: 540px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .camp-card {
+    min-height: 600px;
+    height: 600px;
+  }
+  .camp-card.camp-card-hero {
+    min-height: 620px;
+    height: 620px;
+  }
+  .camp-card.camp-card-panorama {
+    min-height: 560px;
+    height: 560px;
+  }
+}
+
+.camp-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Desktop spotlight: dim/blur non-hovered sibling cards */
+@media (hover: hover) and (pointer: fine) {
+  #accommodation-catalog-grid:has(.camp-card:hover) .camp-card:not(:hover),
+  #activity-catalog-grid:has(.camp-card:hover) .camp-card:not(:hover) {
+    filter: blur(3px) brightness(0.75);
+    opacity: 0.42;
+    transform: scale3d(0.985, 0.985, 1);
+  }
+
+  .camp-card:hover {
+    transform: scale3d(1.025, 1.025, 1);
+    z-index: 20;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+    border-color: rgba(216, 195, 158, 0.6);
+    filter: blur(0) brightness(1);
+    opacity: 1;
+  }
+}
+
+.camp-card.is-active {
+  border-color: rgba(216, 195, 158, 0.6);
+  opacity: 1;
+}
+
+.camp-title-wrap {
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.camp-card:hover .camp-title-wrap,
+.camp-card.is-active .camp-title-wrap {
+  transform: translate3d(0, -10px, 0);
+}
+
+/* Collapsible drawer */
+.camp-drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.45s ease;
+  will-change: grid-template-rows, opacity;
+}
+
+.camp-card:hover .camp-drawer,
+.camp-card.is-active .camp-drawer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.camp-drawer-inner {
+  overflow: hidden;
+}
+
+.camp-drawer-content {
+  transform: translate3d(0, 24px, 0);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.5s ease;
+  will-change: transform, opacity;
+}
+
+.camp-card:hover .camp-drawer-content,
+.camp-card.is-active .camp-drawer-content {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.camp-card:hover .camp-img,
+.camp-card.is-active .camp-img {
+  transform: scale3d(1.06, 1.06, 1);
+}

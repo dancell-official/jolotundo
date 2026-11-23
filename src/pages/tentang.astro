@@ -7,18 +7,15 @@ import AboutGenesisHistory from '../components/AboutGenesisHistory.astro';
 import AboutVisiMisiValues from '../components/AboutVisiMisiValues.astro';
 import AboutWhyChooseUs from '../components/AboutWhyChooseUs.astro';
 import AboutClienteleQuotes from '../components/AboutClienteleQuotes.astro';
+import { buildBreadcrumbSchema, getSiteBase } from '../lib/seo';
 
 // Split kata untuk efek Scroll-Driven Word Reveal (1:1 GoUncharted Editorial Architecture)
 const manifestoWords = "Lebih dari sekadar tempat menginap, kami menghadirkan ruang untuk terhubung kembali dengan alam dan merajut kebersamaan.".split(" ");
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Tentang Kami", "item": `${siteBase}/tentang/` }
-  ]
-};
+const siteBase = getSiteBase(Astro.site);
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Tentang Kami", path: "/tentang/" }
+]);
 ---
 
 <Layout 
@@ -174,109 +171,22 @@ const breadcrumbSchema = {
   </main>
 </Layout>
 
-<style>
-  .font-mono-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
-</style>
+<script>
+  import { initHeroLayerParallax } from '../scripts/heroParallax';
+  import { initWordReveal } from '../scripts/wordReveal';
 
-<!-- ========================================================================= -->
-<!-- JAVASCRIPT: HERO PARALLAX & SCROLL-DRIVEN TEXT REVEAL ENGINES             -->
-<!-- ========================================================================= -->
-<script is:inline>
-  // 1. Hero Parallax Translate-Y Engine
-  function initTentangHeroParallax() {
-    const heroSection = document.getElementById('tentang-hero');
-    const parallaxLayer = document.getElementById('tentang-hero-parallax-layer');
-    if (!heroSection || !parallaxLayer) return;
-
-    let isTicking = false;
-
-    function updateHeroParallax() {
-      const scrollY = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-
-      if (scrollY <= heroHeight + 100) {
-        const translateY = scrollY * 0.35;
-        parallaxLayer.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateHeroParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    updateHeroParallax();
-  }
-
-  // 2. 1:1 GoUncharted Scroll-Driven Word-by-Word Text Reveal Engine
-  function initScrollTextReveal() {
-    const heading = document.getElementById('manifesto-reveal-heading');
-    if (!heading) return;
-
-    const words = heading.querySelectorAll('.reveal-word');
-    if (!words || words.length === 0) return;
-
-    const totalWords = words.length;
-    let isTicking = false;
-    let isVisible = false;
-
-    const updateWords = () => {
-      const rect = heading.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-
-      // Start when heading enters 82% of viewport
-      // Complete smoothly when heading is centered at 38% of viewport
-      const startTrigger = viewportHeight * 0.82;
-      const endTrigger = viewportHeight * 0.38;
-
-      const rawProgress = (startTrigger - rect.top) / (startTrigger - endTrigger);
-      const overallProgress = Math.max(0, Math.min(1, rawProgress));
-
-      words.forEach((word, idx) => {
-        const wordStart = idx / totalWords;
-        const wordEnd = (idx + 1) / totalWords;
-        const wordProgress = Math.max(0, Math.min(1, (overallProgress - wordStart) / (wordEnd - wordStart)));
-        // Subtle base opacity 0.15 smoothly transitions to 1.0 deep solid black
-        const opacity = 0.15 + wordProgress * 0.85;
-        word.style.opacity = opacity.toFixed(2);
-      });
-
-      isTicking = false;
-    };
-
-    const onScroll = () => {
-      if (!isTicking && isVisible) {
-        requestAnimationFrame(updateWords);
-        isTicking = true;
-      }
-    };
-
-    const obs = new IntersectionObserver((entries) => {
-      isVisible = entries[0].isIntersecting;
-      if (isVisible) updateWords();
-    }, { rootMargin: '200px 0px' });
-    obs.observe(heading);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    updateWords();
-  }
-
-  function setupTentangPage() {
-    initTentangHeroParallax();
-    initScrollTextReveal();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupTentangPage);
-  } else {
-    setupTentangPage();
-  }
+  initHeroLayerParallax({
+    sectionId: 'tentang-hero',
+    layerId: 'tentang-hero-parallax-layer',
+    speed: 0.35,
+    bufferPx: 100,
+  });
+  initWordReveal({
+    headingId: 'manifesto-reveal-heading',
+    wordSelector: '.reveal-word',
+    startFactor: 0.82,
+    endFactor: 0.38,
+    minOpacity: 0.15,
+    rootMargin: '200px 0px',
+  });
 </script>

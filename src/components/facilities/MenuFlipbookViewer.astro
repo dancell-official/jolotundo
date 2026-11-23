@@ -1,0 +1,343 @@
+---
+import type { OutletChapter } from '../../data/outlets';
+
+interface Props {
+  sectionId?: string;
+  kicker: string;
+  headline: string;
+  description: string;
+  pdfHref: string;
+  pdfDownloadName: string;
+  quickNewTabHref: string;
+  flipbookUrl: string;
+  toolbarTitle: string;
+  modalEyebrow: string;
+  modalAriaLabel: string;
+  iframeTitle: string;
+  modalIframeTitle: string;
+  tipsDesktop: string;
+  tipsMobile: string;
+  waCtaLabel: string;
+  waUrl: string;
+  chapters: OutletChapter[];
+  showFloatingExitBtn?: boolean;
+  showMobileOverlayTriggers?: boolean;
+}
+
+const {
+  sectionId = 'daftar-menu',
+  kicker,
+  headline,
+  description,
+  pdfHref,
+  pdfDownloadName,
+  quickNewTabHref,
+  flipbookUrl,
+  toolbarTitle,
+  modalEyebrow,
+  modalAriaLabel,
+  iframeTitle,
+  modalIframeTitle,
+  tipsDesktop,
+  tipsMobile,
+  waCtaLabel,
+  waUrl,
+  chapters,
+  showFloatingExitBtn = false,
+  showMobileOverlayTriggers = false,
+} = Astro.props;
+
+const totalPages = chapters.length;
+const totalPagesPadded = String(totalPages).padStart(2, '0');
+---
+
+<section
+  id={sectionId}
+  data-flipbook-viewer
+  data-flipbook-url={flipbookUrl}
+  data-total-pages={String(totalPages)}
+  data-chapters={JSON.stringify(chapters.map((ch) => ch.title))}
+  class="py-16 sm:py-24 lg:py-32 px-4 sm:px-8 lg:px-14 xl:px-20 border-b border-[#141110]/15 bg-[#f4efe6] scroll-mt-14"
+>
+  <div class="max-w-[1680px] mx-auto">
+    <!-- Section Header & PDF Quick Actions -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 sm:pb-10 mb-8 sm:mb-12 border-b border-[#141110]/15">
+      <div class="max-w-4xl">
+        <span class="text-xs font-mono-tag tracking-[0.25em] text-[#141110]/60 uppercase mb-3 block">
+          {kicker}
+        </span>
+        <h2 class="text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#141110] leading-[1.02] font-sans">
+          {headline}
+        </h2>
+        <p class="text-sm sm:text-base lg:text-lg text-[#141110]/70 font-sans font-light leading-relaxed mt-4 sm:mt-5 max-w-3xl">
+          {description}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 shrink-0 self-start lg:self-end">
+        <a
+          href={pdfHref}
+          download={pdfDownloadName}
+          class="px-4 py-2.5 bg-white border border-[#141110]/20 hover:border-[#141110] text-[#141110] font-mono-tag text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm flex items-center gap-2"
+        >
+          <span>Unduh PDF Resmi</span>
+          <span>↓</span>
+        </a>
+        <a
+          href={quickNewTabHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2.5 bg-[#141110] hover:bg-black text-[#f4efe6] font-mono-tag text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm flex items-center gap-2"
+        >
+          <span>Buka Tab Baru</span>
+          <span>↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Menu Chapter Index Tabs -->
+    <div class="mb-6 sm:mb-8">
+      <div class="flex items-center justify-between pb-2 mb-3 text-[11px] font-mono-tag text-[#141110]/60 uppercase tracking-widest">
+        <span>[ PEMBATAS BAB BUKU MENU ]</span>
+        <span class="hidden sm:inline">KLIK BAB UNTUK MEMBUKA HALAMAN</span>
+      </div>
+      <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-2 no-scrollbar">
+        {chapters.map((ch) => (
+          <button
+            type="button"
+            data-jump-page={ch.page}
+            class="chapter-jump-btn shrink-0 px-3 py-1.5 bg-white border border-[#141110]/15 hover:border-[#141110] hover:bg-[#141110] hover:text-white transition-all text-xs font-mono-tag tracking-wider text-[#141110]/80 cursor-pointer flex items-center gap-1.5 shadow-sm"
+          >
+            <span class="font-bold text-[10px] text-[#8c6d37]">{String(ch.page).padStart(2, '0')}.</span>
+            <span>{ch.title}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Interactive Heyzine 3D Flipbook Binder -->
+    <div class="relative w-full bg-[#141110] p-3 sm:p-6 lg:p-8 border border-[#141110]/20 shadow-[0_30px_90px_rgba(0,0,0,0.5)] flex flex-col">
+      <div class="w-full pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-white/15 flex flex-wrap items-center justify-between gap-4 text-white select-none">
+        <div class="flex items-center gap-3">
+          <span class="text-xs sm:text-sm font-mono-tag tracking-wider uppercase text-[#d8c39e] font-semibold">
+            {toolbarTitle}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3 text-xs font-mono-tag">
+          <button
+            id="heyzine-fullscreen-btn"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-[#d8c39e] hover:text-[#141110] text-white border border-white/20 transition-colors cursor-pointer"
+            title="Buka Mode Layar Penuh"
+          >
+            <span>⛶ Layar Penuh</span>
+          </button>
+
+          <a
+            href={flipbookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-[#d8c39e] hover:text-white transition-colors border border-white/20"
+            title="Buka Flipbook di Tab Baru"
+          >
+            <span>Tab Baru</span>
+            <span>↗</span>
+          </a>
+
+          <a
+            href={pdfHref}
+            download
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#d8c39e] hover:bg-white text-[#141110] font-bold transition-colors shadow-sm"
+            title="Unduh File PDF Asli"
+          >
+            <span>Unduh PDF ↓</span>
+          </a>
+        </div>
+      </div>
+
+      <div
+        id="book-viewport-container"
+        class="relative w-full p-2 sm:p-4 lg:p-6 bg-[#26201c] border-2 border-[#3d342e] shadow-[0_25px_80px_rgba(0,0,0,0.85)] flex flex-col items-center justify-center overflow-hidden"
+      >
+        <div class="absolute top-1.5 left-1.5 w-4 h-4 border-t-2 border-l-2 border-[#d8c39e]/60 pointer-events-none z-20"></div>
+        <div class="absolute top-1.5 right-1.5 w-4 h-4 border-t-2 border-r-2 border-[#d8c39e]/60 pointer-events-none z-20"></div>
+        <div class="absolute bottom-1.5 left-1.5 w-4 h-4 border-b-2 border-l-2 border-[#d8c39e]/60 pointer-events-none z-20"></div>
+        <div class="absolute bottom-1.5 right-1.5 w-4 h-4 border-b-2 border-r-2 border-[#d8c39e]/60 pointer-events-none z-20"></div>
+
+        <div class="relative w-full overflow-hidden">
+          <iframe
+            id="heyzine-menu-frame"
+            src={flipbookUrl}
+            class="w-full h-[520px] sm:h-[680px] lg:h-[780px] border-0 rounded-none bg-[#141110] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden"
+            allowfullscreen="true"
+            allow="clipboard-write; fullscreen; autoplay; web-share"
+            title={iframeTitle}
+          ></iframe>
+
+          <!-- Mobile Scroll Guard Overlay: Prevents iframe from trapping touch scroll -->
+          <div
+            id="mobile-scroll-guard"
+            class="absolute inset-0 sm:hidden z-10 flex flex-col items-center justify-start p-3 pointer-events-auto"
+          >
+            {showMobileOverlayTriggers && (
+              <div class="hidden items-center gap-2 pointer-events-auto">
+                <button
+                  type="button"
+                  id="mobile-overlay-fs-trigger"
+                  class="px-3 py-1.5 bg-[#141110]/90 backdrop-blur-md border border-[#d8c39e]/60 text-[#d8c39e] text-[11px] font-mono-tag font-bold uppercase tracking-wider shadow-lg flex items-center gap-1.5 active:bg-[#d8c39e] active:text-[#141110] transition-all cursor-pointer"
+                >
+                  <span>⛶ Layar Penuh</span>
+                </button>
+
+                <button
+                  type="button"
+                  id="mobile-toggle-touch-btn"
+                  class="px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/20 text-white/90 text-[11px] font-mono-tag uppercase tracking-wider shadow-lg flex items-center gap-1.5 active:bg-white active:text-[#141110] transition-all cursor-pointer"
+                >
+                  <span id="mobile-touch-label">👆 Buka Sentuh Buku</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div class="w-full mt-3 pt-3 border-t border-white/10 flex items-center justify-between gap-2 text-white select-none sm:hidden">
+          <button
+            id="mobile-prev-page-btn"
+            type="button"
+            class="flex-1 py-3 px-3 bg-white/10 active:bg-[#d8c39e] active:text-[#141110] text-white border border-white/20 text-xs font-mono-tag font-bold flex items-center justify-center gap-1.5 transition-colors touch-manipulation cursor-pointer"
+            title="Halaman Sebelumnya"
+          >
+            <span>← prev</span>
+          </button>
+
+          <div class="px-3 py-2.5 bg-black/50 border border-white/15 text-white font-mono-tag text-xs font-bold shrink-0 text-center">
+            <span id="mobile-page-indicator" class="text-[#d8c39e]">Hal 01</span> / {totalPagesPadded}
+          </div>
+
+          <button
+            id="mobile-next-page-btn"
+            type="button"
+            class="flex-1 py-3 px-3 bg-[#d8c39e] active:bg-white text-[#141110] text-xs font-mono-tag font-bold flex items-center justify-center gap-1.5 transition-colors touch-manipulation shadow-sm cursor-pointer"
+            title="Halaman Berikutnya"
+          >
+            <span>next →</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="w-full pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono-tag text-white/60">
+        <div class="flex items-center gap-2">
+          <span class="text-[#d8c39e] font-bold">💡 Tips Navigasi:</span>
+          <span class="hidden sm:inline">{tipsDesktop}</span>
+          <span class="sm:hidden">{tipsMobile}</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-xs font-mono-tag font-bold text-[#d8c39e] hover:text-white transition-colors uppercase flex items-center gap-1.5"
+          >
+            <span>{waCtaLabel}</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Fullscreen Menu Reader Modal -->
+<div
+  id="menu-fullscreen-modal"
+  class="fixed inset-0 z-[99999] bg-[#141110] hidden flex-col select-none"
+  role="dialog"
+  aria-modal="true"
+  aria-label={modalAriaLabel}
+>
+  <div class="w-full px-3 sm:px-6 py-2.5 sm:py-3.5 bg-[#1c1815] border-b border-white/15 flex items-center justify-between gap-3 text-white z-50 shrink-0">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+      <div class="flex flex-col min-w-0">
+        <span class="text-[10px] sm:text-xs font-mono-tag text-[#d8c39e] tracking-widest uppercase truncate font-bold">
+          {modalEyebrow}
+        </span>
+        <span id="modal-chapter-title" class="text-xs sm:text-sm text-white/90 font-sans truncate font-medium">
+          {chapters[0]?.title || 'Cover Menu'}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div class="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-black/60 border border-white/20 text-[#d8c39e] font-mono-tag text-xs font-bold shrink-0">
+        <span id="modal-page-num">Hal 01</span> / {totalPagesPadded}
+      </div>
+
+      <button
+        type="button"
+        id="modal-close-btn"
+        class="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#d8c39e] hover:bg-white active:scale-95 text-[#141110] font-mono-tag text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-xl cursor-pointer border-0"
+        title="Keluar dari Tampilan Layar Penuh"
+      >
+        <span class="text-base font-black">✕</span>
+        <span>KELUAR</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="relative w-full flex-1 bg-[#141110] overflow-hidden">
+    <iframe
+      id="modal-heyzine-frame"
+      src=""
+      class="w-full h-full border-0 bg-[#141110] overflow-hidden"
+      allowfullscreen="true"
+      allow="clipboard-write; fullscreen; autoplay; web-share"
+      title={modalIframeTitle}
+    ></iframe>
+
+    {showFloatingExitBtn && (
+      <button
+        type="button"
+        id="modal-floating-exit-btn"
+        class="fixed bottom-16 right-4 sm:bottom-20 sm:right-6 z-[100] px-4 py-2.5 bg-[#d8c39e] text-[#141110] font-mono-tag font-black text-xs uppercase tracking-wider shadow-2xl flex items-center gap-1.5 active:scale-95 cursor-pointer border border-black/20"
+        title="Tutup Layar Penuh"
+      >
+        <span>✕</span>
+        <span>TUTUP</span>
+      </button>
+    )}
+  </div>
+
+  <div class="w-full px-3 sm:px-6 py-2.5 sm:py-3 bg-[#1c1815] border-t border-white/15 flex items-center justify-between gap-3 text-white z-50 shrink-0">
+    <button
+      id="modal-prev-btn"
+      type="button"
+      class="flex-1 sm:flex-initial sm:min-w-[160px] py-2.5 px-4 bg-white/10 active:bg-[#d8c39e] active:text-[#141110] text-white border border-white/20 text-xs font-mono-tag font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation cursor-pointer"
+    >
+      <span>← Hal Sebelumnya</span>
+    </button>
+
+    <div class="hidden sm:flex items-center gap-3 text-xs font-mono-tag text-white/50">
+      <span>Tekan <kbd class="px-1.5 py-0.5 bg-white/10 border border-white/20 text-white rounded">Esc</kbd> atau klik <strong>✕ KELUAR</strong> untuk kembali</span>
+    </div>
+
+    <button
+      id="modal-next-btn"
+      type="button"
+      class="flex-1 sm:flex-initial sm:min-w-[160px] py-2.5 px-4 bg-[#d8c39e] active:bg-white text-[#141110] text-xs font-mono-tag font-bold flex items-center justify-center gap-2 transition-colors touch-manipulation cursor-pointer"
+    >
+      <span>Hal Berikutnya →</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  import { initHeyzineMenuBook } from '../../scripts/flipbookViewer';
+
+  document.querySelectorAll<HTMLElement>('[data-flipbook-viewer]').forEach((el) => {
+    if (el.id) initHeyzineMenuBook(el.id);
+  });
+</script>

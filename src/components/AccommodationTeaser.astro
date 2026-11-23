@@ -260,70 +260,11 @@ const staysConfig = [
 </style>
 
 <!-- Mobile On-Screen Auto Reveal & Touch Script -->
-<script is:inline>
-  function initCampCardInteractions() {
-    const grid = document.getElementById('accommodation-grid');
-    if (!grid) return;
+<script>
+  import { initCatalogGrid } from '../scripts/catalogFilter';
 
-    const cards = Array.from(grid.querySelectorAll('.camp-card'));
-
-    // Check if device is mobile or touchscreen
-    const isMobile = window.matchMedia('(max-width: 1023px)').matches || ('ontouchstart' in window);
-
-    // 1. MOBILE ON-SCREEN AUTO REVEAL (IntersectionObserver)
-    // As each camp card scrolls into the comfortable viewing center of the screen, it automatically activates!
-    if (isMobile && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const card = entry.target;
-          if (entry.isIntersecting) {
-            card.classList.add('is-active');
-          } else {
-            card.classList.remove('is-active');
-          }
-        });
-      }, {
-        root: null,
-        rootMargin: '-8% 0px -12% 0px',
-        threshold: 0.18
-      });
-
-      cards.forEach((card) => observer.observe(card));
-    }
-
-    // 2. TAP / CLICK TOGGLE (Manual override on tap)
-    cards.forEach((card) => {
-      card.addEventListener('click', (e) => {
-        // If clicking directly on a button or link inside the card, allow normal link navigation
-        const target = e.target;
-        if (target && target.closest && (target.closest('a') || target.closest('button'))) {
-          return;
-        }
-
-        const isCurrentlyActive = card.classList.contains('is-active');
-
-        // Toggle state for tapped card
-        if (isCurrentlyActive) {
-          card.classList.remove('is-active');
-        } else {
-          cards.forEach((c) => c.classList.remove('is-active'));
-          card.classList.add('is-active');
-        }
-      });
-    });
-
-    // Close on click outside the accommodation grid
-    document.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target && target.closest && !target.closest('#accommodation-grid')) {
-        cards.forEach((c) => c.classList.remove('is-active'));
-      }
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCampCardInteractions);
-  } else {
-    initCampCardInteractions();
-  }
+  initCatalogGrid({
+    gridId: 'accommodation-grid',
+    closeOnOutsideClick: true,
+  });
 </script>

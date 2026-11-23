@@ -196,142 +196,20 @@ const editorialStats = [
   </div>
 </section>
 
-<!-- Scrollytelling Script: Word-by-Word Smooth Opacity Reveal synced with Lenis -->
+<!-- Scrollytelling Script: Word-by-Word Smooth Opacity Reveal & Stats Scramble -->
 <script>
-  function initScrollTextReveal() {
-    const heading = document.getElementById('manifesto-reveal-heading');
-    if (!heading) return;
+  import { initWordReveal } from '../scripts/wordReveal';
+  import { initScrambleStats } from '../scripts/scrambleStats';
 
-    const words = heading.querySelectorAll<HTMLElement>('.reveal-word');
-    if (!words || words.length === 0) return;
-
-    const totalWords = words.length;
-    let isTicking = false;
-    let isVisible = false;
-
-    const updateWords = () => {
-      const rect = heading.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-
-      const startTrigger = viewportHeight * 0.82;
-      const endTrigger = viewportHeight * 0.36;
-
-      const rawProgress = (startTrigger - rect.top) / (startTrigger - endTrigger);
-      const overallProgress = Math.max(0, Math.min(1, rawProgress));
-
-      words.forEach((word, idx) => {
-        const wordStart = idx / totalWords;
-        const wordEnd = (idx + 1) / totalWords;
-        const wordProgress = Math.max(0, Math.min(1, (overallProgress - wordStart) / (wordEnd - wordStart)));
-        const opacity = 0.18 + wordProgress * 0.82;
-        word.style.opacity = opacity.toFixed(2);
-      });
-      isTicking = false;
-    };
-
-    const onScroll = () => {
-      if (!isTicking && isVisible) {
-        requestAnimationFrame(updateWords);
-        isTicking = true;
-      }
-    };
-
-    const obs = new IntersectionObserver((entries) => {
-      isVisible = entries[0].isIntersecting;
-      if (isVisible) updateWords();
-    }, { rootMargin: '150px 0px' });
-    obs.observe(heading);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    updateWords();
-  }
-
-  // --- Scramble Text Decryption Effect untuk Stats Angka ---
-  function initScrambleStats() {
-    const statElements = document.querySelectorAll<HTMLElement>('.scramble-stat');
-    if (!statElements || statElements.length === 0) return;
-
-    const chars = "0123456789#%*+=-";
-
-    function scramble(el: HTMLElement, duration = 750) {
-      const target = el.dataset.scramble || el.textContent || "";
-      if (!target) return;
-
-      const length = target.length;
-      const fps = 30;
-      const totalFrames = Math.max(12, Math.round((duration / 1000) * fps));
-      let frame = 0;
-
-      // Hentikan timer sebelumnya jika ada
-      const activeTimer = (el as any).__scrambleTimer;
-      if (activeTimer) {
-        clearInterval(activeTimer);
-      }
-
-      const timer = setInterval(() => {
-        frame++;
-        const progress = frame / totalFrames;
-
-        let result = "";
-        for (let i = 0; i < length; i++) {
-          // Ambang batas kapan karakter asli mengunci (lock-in)
-          const charThreshold = (i + 1) / (length + 0.4);
-          if (progress >= charThreshold) {
-            result += target[i];
-          } else {
-            result += chars[Math.floor(Math.random() * chars.length)];
-          }
-        }
-
-        el.textContent = result;
-
-        if (frame >= totalFrames) {
-          clearInterval(timer);
-          (el as any).__scrambleTimer = null;
-          el.textContent = target;
-        }
-      }, 1000 / fps);
-
-      (el as any).__scrambleTimer = timer;
-    }
-
-    // Observer saat elemen masuk ke layar (enter screen)
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          scramble(el, 800);
-          observer.unobserve(el);
-        }
-      });
-    }, {
-      threshold: 0.3,
-      rootMargin: "0px 0px -40px 0px"
-    });
-
-    statElements.forEach((el) => {
-      observer.observe(el);
-
-      // Re-trigger scramble saat kolom di-hover pengunjung
-      const parentCard = el.closest<HTMLElement>('.stat-card');
-      if (parentCard) {
-        parentCard.addEventListener('mouseenter', () => {
-          scramble(el, 480);
-        });
-      }
-    });
-  }
-
-  function setupAboutManifesto() {
-    initScrollTextReveal();
-    initScrambleStats();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupAboutManifesto);
-  } else {
-    setupAboutManifesto();
-  }
+  initWordReveal({
+    headingId: 'manifesto-reveal-heading',
+    wordSelector: '.reveal-word',
+    startFactor: 0.82,
+    endFactor: 0.36,
+    minOpacity: 0.18,
+    rootMargin: '150px 0px',
+  });
+  initScrambleStats();
 </script>
 
 

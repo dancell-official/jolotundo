@@ -5,6 +5,7 @@ import FooterCTA from '../../components/FooterCTA.astro';
 import CampPreviewGallery from '../../components/CampPreviewGallery.astro';
 import accommodations from '../../data/accommodations.json';
 import siteData from '../../data/siteData.json';
+import { buildAccommodationSchema, buildBreadcrumbSchema, getSiteBase } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const paths = accommodations.map((camp, idx) => {
@@ -43,42 +44,18 @@ const pills = camp.pills || [camp.setting, camp.elevation || "±800 MDPL", camp.
 
 // SEO: Canonical, Breadcrumb Schema & concise 120-155 char description
 const isAliasRoute = Astro.params.id === 'pinus-camp-plus';
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const siteBase = getSiteBase(Astro.site);
 const rawCampDesc = `${camp.name} di Jolotundo Glamping Nganjuk. ${camp.headline || camp.tagline} (${camp.capacity}).`;
 const seoDesc = rawCampDesc.length > 155
   ? `${camp.name} di Jolotundo Glamping Nganjuk. Kapasitas ${camp.capacity}, ${camp.setting}, tarif ${camp.priceWeekday}/malam.`
   : rawCampDesc;
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Akomodasi", "item": `${siteBase}/akomodasi/` },
-    { "@type": "ListItem", "position": 3, "name": camp.name, "item": `${siteBase}/akomodasi/${camp.id}/` }
-  ]
-};
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Akomodasi", path: "/akomodasi/" },
+  { name: camp.name, path: `/akomodasi/${camp.id}/` }
+]);
 
-const accommodationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": `${camp.name} — Jolotundo Glamping & Edupark`,
-  "description": seoDesc,
-  "image": `${siteBase}/og-image.jpg`,
-  "url": `${siteBase}/akomodasi/${camp.id}/`,
-  "brand": {
-    "@type": "Brand",
-    "name": "Jolotundo Glamping & Edupark"
-  },
-  "offers": {
-    "@type": "AggregateOffer",
-    "priceCurrency": "IDR",
-    "lowPrice": camp.priceRawWeekday,
-    "highPrice": camp.priceRawWeekend,
-    "offerCount": camp.pricingTiers ? camp.pricingTiers.length : 2,
-    "availability": "https://schema.org/InStock",
-    "url": `${siteBase}/akomodasi/${camp.id}/`
-  }
-};
+const accommodationSchema = buildAccommodationSchema(siteBase, camp, seoDesc);
 ---
 
 <Layout 
@@ -597,48 +574,13 @@ const accommodationSchema = {
   <FooterCTA />
 </Layout>
 
-<!-- ========================================================================= -->
-<!-- PARALLAX TRANSLATE-Y CONTROLLER SCRIPT (GPU-Accelerated Smooth Parallax) -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initCampHeroParallax() {
-    const heroSection = document.getElementById('camp-hero');
-    const parallaxLayer = document.getElementById('hero-parallax-layer');
-    if (!heroSection || !parallaxLayer) return;
+<script>
+  import { initHeroLayerParallax } from '../../scripts/heroParallax';
 
-    let isTicking = false;
-
-    function updateParallax() {
-      const scrollY = window.scrollY;
-      const heroHeight = heroSection.offsetHeight;
-
-      // Only calculate while hero is within view
-      if (scrollY <= heroHeight + 50) {
-        // Natural parallax formula: translates downwards at 32% speed of scroll
-        const translateY = scrollY * 0.32;
-        parallaxLayer.style.transform = `translate3d(0, ${translateY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          updateParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Initial check
-    updateParallax();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCampHeroParallax);
-  } else {
-    initCampHeroParallax();
-  }
+  initHeroLayerParallax({
+    sectionId: 'camp-hero',
+    layerId: 'hero-parallax-layer',
+    speed: 0.32,
+    bufferPx: 50,
+  });
 </script>

@@ -1,5 +1,11 @@
 ---
 import siteData from '../data/siteData.json';
+import HorizontalPreviewGallery from './common/HorizontalPreviewGallery.astro';
+import {
+  calcGalleryScrollHeightVh,
+  getActivityGalleryImages,
+  type GalleryImageItem,
+} from '../data/galleries';
 
 interface Props {
   activity: {
@@ -11,382 +17,46 @@ interface Props {
     elevation: string;
     priceStarting: string;
     contactType: string;
-    gallery?: Array<{ src: string; caption: string; subtitle: string }>;
+    gallery?: GalleryImageItem[];
   };
 }
 
 const { activity } = Astro.props;
+const galleryImages = getActivityGalleryImages(activity.id, activity.gallery || []);
+const scrollHeightVh = calcGalleryScrollHeightVh(galleryImages.length, 340, 12);
 
-type ActivityMeta = Record<string, { caption: string; subtitle: string; order: number }>;
-
-// Mapping activity ID to folder name in public/images/activities/
-const activityFolderMap: Record<string, string> = {
-  "atv-adventure": "atv",
-  "atv": "atv",
-  "jeep-offroad": "jeep",
-  "jeep": "jeep",
-  "wisata-berkuda": "horse",
-  "horse-riding": "horse",
-  "horse": "horse",
-  "mini-zoo": "zoo",
-  "mini-zoo-edupark": "zoo",
-  "zoo": "zoo",
-  "forest-spa": "spa",
-  "spa": "spa",
-  "outbound-gathering": "outbond",
-  "outbound": "outbond",
-  "outbond": "outbond"
-};
-
-// Curated metadata for each activity image (built statically without node:fs/process.cwd())
-const activityMetaMap: Record<string, ActivityMeta> = {
-  atv: {
-    "atv1.avif": { caption: "Aksi Lintasan Sungai", subtitle: "Sensasi Cipratan Air Alami", order: 1 },
-    "atv2.avif": { caption: "Menembus Rute Bebatuan", subtitle: "Tantangan Jalur Offroad Kali", order: 2 },
-    "atv3.avif": { caption: "Konvoi Jalur Pinus", subtitle: "Manuver di Bawah Naungan Pohon", order: 3 },
-    "atv4.avif": { caption: "Adrenalin Quad Bike", subtitle: "Kendali Penuh di Medan Menantang", order: 4 },
-    "atv5.avif": { caption: "Tanjakan Tanah Basah", subtitle: "Torsi Kuat Mesin ATV Prima", order: 5 },
-    "atv6.avif": { caption: "Kanopi Purba Bajulan", subtitle: "Kesejukan Udara ±800 MDPL", order: 6 },
-    "atv7.avif": { caption: "Arung Arus Dangkal", subtitle: "Keseruan Basah di Sungai Berbatu", order: 7 },
-    "atv8.avif": { caption: "Jalur Berkelok Hutan", subtitle: "Sensasi Petualangan Alami", order: 8 },
-    "atv9.avif": { caption: "Offroad Seru Bersama", subtitle: "Kekompakan Mengarungi Jalur", order: 9 },
-    "atv10.avif": { caption: "Eksplorasi Lereng Wilis", subtitle: "Panorama Rimba Asri Jolotundo", order: 10 },
-    "atv11.avif": { caption: "Aksi Penuh Semangat", subtitle: "Momen Adrenalin Tak Terlupakan", order: 11 },
-    "atv.avif": { caption: "Unit Quad Bike Prima", subtitle: "Perawatan Rutin & Standar Keamanan", order: 12 },
-  },
-  jeep: {
-    "jeep4.avif": { caption: "Aksi 4x4 Offroad Ekstrem", subtitle: "Menembus Rute Bebatuan Cadas", order: 1 },
-    "jeep.avif": { caption: "Armada 4x4 Tangguh", subtitle: "Mobil Overland Berpenggerak Ganda", order: 2 },
-    "jeep1.avif": { caption: "Tanjakan Terjal Lereng", subtitle: "Skill Driver Berpengalaman", order: 3 },
-    "jeep3.avif": { caption: "Ekspedisi Rimba Wilis", subtitle: "Kawasan Alami Hutan Tropis", order: 4 },
-    "jeep5.avif": { caption: "Lintas Batuan Purba", subtitle: "Sensasi Goyangan Offroad Asli", order: 5 },
-    "jeep6.avif": { caption: "Rute Air Terjun Ngleyangan", subtitle: "Petualangan Menembus Percikan Air", order: 6 },
-    "jeep7.avif": { caption: "Sensasi Overland Seru", subtitle: "Pemberhentian Spot Foto Eksotis", order: 7 },
-    "jeep8.avif": { caption: "Panorama Lembah Bajulan", subtitle: "Ketinggian Sejuk Puncak Wilis", order: 8 },
-    "jeep9.avif": { caption: "Konvoi Offroad Berkesan", subtitle: "Kebersamaan Rombongan & Keluarga", order: 9 },
-  },
-  horse: {
-    "horse1.avif": { caption: "Tunggang Kuda Lereng Wilis", subtitle: "Pengalaman Berkuda di Alam Asri", order: 1 },
-    "horse2.avif": { caption: "Jalur Teduh Kanopi Pinus", subtitle: "Langkah Santai Menikmati Udara Sejuk", order: 2 },
-    "horse3.avif": { caption: "Pawang Pendamping Berpengalaman", subtitle: "Keamanan & Kenyamanan Terjamin", order: 3 },
-    "horse4.avif": { caption: "Ketenangan Semilir Angin", subtitle: "Aktivitas Menenangkan & Meditatif", order: 4 },
-    "horse5.avif": { caption: "Wisata Ramah Keluarga", subtitle: "Cocok untuk Anak & Pemula", order: 5 },
-  },
-  zoo: {
-    "zoo1.avif": { caption: "Penangkaran Rusa Totol", subtitle: "Satwa Jinak di Lereng Gunung Wilis", order: 1 },
-    "zoo2.avif": { caption: "Interaksi & Feeding Rusa", subtitle: "Beri Pakan Wortel Segar Secara Langsung", order: 2 },
-    "zoo3.avif": { caption: "Rusa di Kawasan Rimba Pinus", subtitle: "Habitat Terbuka Dekat Area Glamping", order: 3 },
-    "zoo-domba.avif": { caption: "Zona Edukasi Domba Dorper", subtitle: "Papan Informasi & Area Padang Rumput Pinus", order: 4 },
-    "zoo-kandang2.avif": { caption: "Kompleks Kandang Kayu Edupark", subtitle: "Sarana Terawat di Tengah Hutan Pinus", order: 5 },
-    "zoo-kandang3.avif": { caption: "Koridor Kandang & Area Satwa", subtitle: "Lingkungan Bersih, Sejuk & Ramah Anak", order: 6 },
-  },
-  spa: {
-    "spa1.jpg": { caption: "Ruang Treatment Utama", subtitle: "Suite Bersih & Tenang Berbalut Kayu Jati", order: 1 },
-    "spa2.jpg": { caption: "Area Refleksi & Foot Spa", subtitle: "Kursi Santai Ergonomis & Rendaman Herbal", order: 2 },
-    "spa3.jpg": { caption: "Kamar Privat Massage & Lulur", subtitle: "Layanan Khusus Tamu Deluxe dengan Rempah Hangat", order: 3 },
-    "spa4.jpg": { caption: "Sudut Aromaterapi & Teh Herbal", subtitle: "Minyak Esensial Wilis & Penyegar Tubuh Alami", order: 4 },
-  },
-  outbond: {
-    "outbond1.avif": { caption: "Sinergi & Team Building", subtitle: "Membangun Kekompakan Kelompok", order: 1 },
-    "outbond2.avif": { caption: "Dinamika Kelompok & Fun Games", subtitle: "Tawa & Semangat Kolaborasi", order: 2 },
-    "outbond3.avif": { caption: "Arena Lapangan Pinus Luas", subtitle: "Kapasitas Ratusan Peserta", order: 3 },
-    "outbond4.avif": { caption: "Aktivitas Luar Ruang Terbuka", subtitle: "Udara Bersih Pegunungan Wilis", order: 4 },
-    "outbond5.avif": { caption: "Tantangan Kerjasama Regu", subtitle: "Fasilitator & Trainer Profesional", order: 5 },
-    "outbond6.avif": { caption: "Leadership & Ice Breaking", subtitle: "Mencairkan Suasana & Eratkan Komunikasi", order: 6 },
-    "outbond7.avif": { caption: "Gathering Korporat & BUMN", subtitle: "Paket Lengkap All-Inclusive", order: 7 },
-    "outbond8.avif": { caption: "Momen Kebersamaan Berkesan", subtitle: "Energi Positif untuk Tim Anda", order: 8 },
-  }
-};
-
-function getActivityImages(activityId: string): Array<{ src: string; caption: string; subtitle: string }> {
-  const folder = activityFolderMap[activityId];
-  const metaMap = folder ? activityMetaMap[folder] : undefined;
-  if (!folder || !metaMap) return [];
-  return Object.entries(metaMap)
-    .sort(([fileA, metaA], [fileB, metaB]) => metaA.order - metaB.order || fileA.localeCompare(fileB))
-    .map(([file, meta]) => ({
-      src: encodeURI(`/images/activities/${folder}/${file}`),
-      caption: meta.caption || file.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').toUpperCase(),
-      subtitle: meta.subtitle || "Jolotundo Edupark"
-    }));
-}
-
-const dynamicImages = getActivityImages(activity.id);
-const galleryImages = dynamicImages.length > 0 ? dynamicImages : (activity.gallery || []);
-
-// Destination WhatsApp Concierge
-const waPhone = activity.contactType === "corporate" ? "6282249829998" : (siteData.brand.whatsapp || "6282249828998");
+const waPhone =
+  activity.contactType === 'corporate'
+    ? '6282249829998'
+    : siteData.brand.whatsapp || '6282249828998';
 const waUrl = `https://wa.me/${waPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Halo Admin Jolotundo Edupark, saya tertarik reservasi dan info ketersediaan untuk *${activity.name}*.`)}`;
-
-// Calculate dynamic scroll height based on image count
-const scrollHeightVh = Math.max(220, Math.min(340, 180 + galleryImages.length * 12));
 ---
 
-<!-- 
-  =============================================================================
-  SECTION: STICKY HORIZONTAL SCROLL PREVIEW GALLERY (1:1 GOUNCHARTED REFERENCE)
-  - Outer Container: Dynamic vertical scroll distance based on image count
-  - Sticky Viewport: Pins at top of screen (h-screen)
-  - Horizontal Track: Translates -X on vertical scroll
-  - Bottom Bar: 1:1 with GoUncharted (Title, Specs, Progress Line, Price, CTA)
-  =============================================================================
--->
-<section 
-  id="wahana-preview-gallery" 
-  class="relative bg-[#f4efe6] text-[#141110] border-t border-[#141110]/15 select-none"
-  style={`height: ${scrollHeightVh}vh;`}
->
-  
-  <!-- Sticky Viewport Frame (Pins at top of screen) -->
-  <div 
-    id="wahana-gallery-sticky-viewport" 
-    class="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-5 sm:py-7 lg:py-8 px-4 sm:px-8 lg:px-14 xl:px-20 select-none z-10"
-  >
-    
-    <!-- Top Bar: Kicker + Status -->
-    <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-[#141110]/15 w-full max-w-[1680px] mx-auto shrink-0">
-      <div class="flex items-center gap-2.5 text-xs font-mono-tag text-[#141110]/70 tracking-widest uppercase">
-        <span class="w-1.5 h-1.5 bg-[#141110]"></span>
-        <span>PREVIEW GALLERY // SUASANA & MEDAN JALUR</span>
-      </div>
-      <div class="flex items-center gap-2 text-[11px] font-mono-tag text-[#141110]/60 uppercase tracking-widest">
-        <span class="inline-block w-1.5 h-1.5 bg-emerald-700 animate-pulse"></span>
-        <span class="hidden sm:inline">Scroll ke bawah untuk menjelajahi visual aktivitas</span>
-        <span class="sm:hidden">Scroll untuk foto aktivitas</span>
-      </div>
-    </div>
-
-    <!-- Middle: Horizontal Sliding Image Track -->
-    <div id="wahana-slider-window" class="relative w-full my-auto overflow-hidden py-2 sm:py-4">
-      <div 
-        id="wahana-slider-track" 
-        class="flex items-center gap-4 sm:gap-6 lg:gap-8 will-change-transform"
-        style="transform: translate3d(0, 0px, 0);"
-      >
-        {galleryImages.map((img, i) => (
-          <div class="gallery-card shrink-0 relative h-[48vh] sm:h-[54vh] lg:h-[58vh] aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-[#141110] border border-[#141110]/20 shadow-xl group cursor-pointer transform-gpu will-change-transform contain-paint">
-            
-            <!-- Image with Smooth Hover Zoom -->
-            <img 
-              src={img.src} 
-              alt={img.caption} 
-              class="w-full h-full object-cover object-center transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              loading={i < 3 ? "eager" : "lazy"}
-              decoding="async"
-            />
-
-            <!-- Soft Vignette Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/20 pointer-events-none"></div>
-
-            <!-- Top Index Tag -->
-            <div class="absolute top-4 left-4 z-10 pointer-events-none">
-              <span class="text-[10px] font-mono-tag tracking-widest text-[#d8c39e] uppercase px-2.5 py-1 bg-black/75 backdrop-blur-md border border-white/10 font-bold">
-                {String(i + 1).padStart(2, '0')} // {String(galleryImages.length).padStart(2, '0')}
-              </span>
-            </div>
-
-            <!-- Bottom Floating Caption -->
-            <div class="absolute bottom-4 sm:bottom-5 left-4 sm:left-5 right-4 sm:right-5 z-10 pointer-events-none">
-              <span class="text-xs sm:text-sm font-bold font-sans text-white uppercase tracking-tight block drop-shadow leading-snug">
-                {img.caption}
-              </span>
-              <span class="text-[10px] font-mono-tag text-[#d8c39e] uppercase tracking-wider block mt-0.5">
-                {img.subtitle}
-              </span>
-            </div>
-
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <!-- Bottom: 1:1 GoUncharted Bottom Sub-Bar -->
-    <div class="w-full max-w-[1680px] mx-auto shrink-0 flex flex-col gap-3 pt-1">
-      
-      <!-- Hairline Divider with Dynamic Sliding Progress Bar Line -->
-      <div class="relative w-full h-[2px] bg-[#141110]/15 overflow-hidden">
-        <div 
-          id="wahana-gallery-progress-bar" 
-          class="absolute top-0 left-0 h-full w-full bg-[#141110] origin-left will-change-transform"
-          style="transform: scaleX(0.15);"
-        ></div>
-      </div>
-
-      <!-- 1:1 GoUncharted Metadata Row Below Divider -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
-        
-        <!-- Left: Activity Title + Setting + 3 Metadata Specs -->
-        <div class="flex flex-wrap items-center gap-4 sm:gap-8">
-          
-          <div>
-            <h4 class="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-[#141110] uppercase font-sans leading-none">
-              {activity.name}
-            </h4>
-            <span class="text-[10px] font-mono-tag text-[#141110]/60 uppercase tracking-widest block mt-0.5">
-              {activity.setting}
-            </span>
-          </div>
-
-          <div class="hidden sm:block h-8 w-[1px] bg-[#141110]/15"></div>
-
-          <div class="flex items-center gap-4 sm:gap-6 text-xs font-mono-tag text-[#141110]">
-            <div>
-              <span class="text-xs sm:text-sm font-bold block">{activity.elevation || "±800 MDPL"}</span>
-              <span class="text-[9px] text-[#141110]/50 uppercase tracking-widest block">ELEVASI</span>
-            </div>
-            
-            <div class="h-6 w-[1px] bg-[#141110]/15"></div>
-
-            <div>
-              <span class="text-xs sm:text-sm font-bold block">ALL SEASONS</span>
-              <span class="text-[9px] text-[#141110]/50 uppercase tracking-widest block">OPERASIONAL</span>
-            </div>
-
-            <div class="h-6 w-[1px] bg-[#141110]/15 hidden xs:block"></div>
-
-            <div class="hidden xs:block">
-              <span class="text-xs sm:text-sm font-bold block">VERIFIED</span>
-              <span class="text-[9px] text-[#141110]/50 uppercase tracking-widest block">SAFETY GEAR</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right: Starting Price + CTA Booking WhatsApp -->
-        <div class="flex items-center justify-between sm:justify-end gap-5">
-          <div class="text-right">
-            <span class="text-[10px] font-mono-tag text-[#141110]/50 uppercase tracking-widest block">
-              {activity.priceStarting.toLowerCase().includes('gratis') ? 'Tiket Masuk' : 'Mulai Dari'}
-            </span>
-            <span class="text-lg sm:text-xl font-bold font-mono-tag text-[#141110] leading-none">
-              {activity.priceStarting}
-            </span>
-          </div>
-
-          <a 
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#141110] text-[#f4efe6] text-xs font-mono-tag font-bold uppercase tracking-wider hover:bg-black transition-colors"
-          >
-            <span>Reservasi Slot</span>
-            <span>↗</span>
-          </a>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ========================================================================= -->
-<!-- JAVASCRIPT: STICKY HORIZONTAL SCROLL CONTROLLER SCRIPT (GPU OPTIMIZED)   -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initWahanaGallery() {
-    const section = document.getElementById('wahana-preview-gallery');
-    const track = document.getElementById('wahana-slider-track');
-    const progressBar = document.getElementById('wahana-gallery-progress-bar');
-    const sliderWindow = document.getElementById('wahana-slider-window');
-
-    if (!section || !track || !progressBar || !sliderWindow) return;
-
-    // Cached metrics: NO DOM queries during active scroll!
-    let sectionTop = 0;
-    let sectionHeight = 0;
-    let windowHeight = 0;
-    let totalDistance = 0;
-    let maxScrollX = 0;
-    let isTicking = false;
-
-    function updateMetrics() {
-      const rect = section.getBoundingClientRect();
-      windowHeight = window.innerHeight;
-      sectionTop = window.scrollY + rect.top;
-      sectionHeight = section.offsetHeight;
-      totalDistance = Math.max(1, sectionHeight - windowHeight);
-
-      const trackWidth = track.scrollWidth;
-      const windowWidth = sliderWindow.offsetWidth;
-      maxScrollX = Math.max(0, trackWidth - windowWidth + 64);
-    }
-
-    function renderGallery(currentScroll) {
-      const scrolled = currentScroll - sectionTop;
-
-      // Skip off-screen rendering
-      if (scrolled < -windowHeight || scrolled > totalDistance + windowHeight) {
-        return;
-      }
-
-      const progress = Math.max(0, Math.min(1, scrolled / totalDistance));
-      const translateX = progress * maxScrollX;
-
-      // Pure GPU transform - 0 layout reflows!
-      track.style.transform = `translate3d(-${translateX.toFixed(1)}px, 0, 0)`;
-      progressBar.style.transform = `scaleX(${(0.15 + progress * 0.85).toFixed(4)})`;
-    }
-
-    function onScrollNative() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          const currentScroll = window.__lenis ? window.__lenis.scroll : window.scrollY;
-          renderGallery(currentScroll);
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    // Direct synchronization with Lenis smooth scroll
-    if (window.__lenis) {
-      window.__lenis.on('scroll', (e) => {
-        renderGallery(typeof e.scroll === 'number' ? e.scroll : window.scrollY);
-      });
-    } else {
-      window.addEventListener('scroll', onScrollNative, { passive: true });
-      const checkLenis = setInterval(() => {
-        if (window.__lenis) {
-          window.removeEventListener('scroll', onScrollNative);
-          window.__lenis.on('scroll', (e) => {
-            renderGallery(typeof e.scroll === 'number' ? e.scroll : window.scrollY);
-          });
-          clearInterval(checkLenis);
-        }
-      }, 150);
-      setTimeout(() => clearInterval(checkLenis), 3000);
-    }
-
-    // Refresh metrics on resize
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        updateMetrics();
-        const currentScroll = window.__lenis ? window.__lenis.scroll : window.scrollY;
-        renderGallery(currentScroll);
-      }, 100);
-    }, { passive: true });
-
-    // Initial setup
-    updateMetrics();
-    const initialScroll = window.__lenis ? window.__lenis.scroll : window.scrollY;
-    renderGallery(initialScroll);
-
-    // Re-verify metrics once all images have laid out
-    window.addEventListener('load', () => {
-      updateMetrics();
-      const currentScroll = window.__lenis ? window.__lenis.scroll : window.scrollY;
-      renderGallery(currentScroll);
-    }, { once: true });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWahanaGallery);
-  } else {
-    initWahanaGallery();
-  }
-</script>
+<HorizontalPreviewGallery
+  sectionId="wahana-preview-gallery"
+  viewportId="wahana-gallery-sticky-viewport"
+  windowId="wahana-slider-window"
+  trackId="wahana-slider-track"
+  progressBarId="wahana-gallery-progress-bar"
+  images={galleryImages}
+  scrollHeightVh={scrollHeightVh}
+  sectionBorderClass="border-t border-[#141110]/15"
+  topBar={{
+    leftText: 'PREVIEW GALLERY // SUASANA & MEDAN JALUR',
+    rightDesktopText: 'Scroll ke bawah untuk menjelajahi visual aktivitas',
+    rightMobileText: 'Scroll untuk foto aktivitas',
+    pulseDotClass: 'bg-emerald-700',
+  }}
+  title={activity.name}
+  subtitle={activity.setting}
+  specs={[
+    { value: activity.elevation || '±800 MDPL', label: 'ELEVASI' },
+    { value: 'ALL SEASONS', label: 'OPERASIONAL' },
+    { value: 'VERIFIED', label: 'SAFETY GEAR' },
+  ]}
+  priceValue={activity.priceStarting}
+  priceLabel={activity.priceStarting.toLowerCase().includes('gratis') ? 'Tiket Masuk' : 'Mulai Dari'}
+  priceLabelFirst={true}
+  ctaLabel="Reservasi Slot"
+  ctaHref={waUrl}
+/>

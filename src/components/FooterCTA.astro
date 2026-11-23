@@ -196,85 +196,9 @@ const googleMapsUrl = "https://maps.google.com/?q=Jolotundo+Glamping+and+Edupark
 
 </footer>
 
-<!-- Optimized Translate-Y Parallax Engine & Back to Top Script (Zero Stuttering & rAF Throttled) -->
-<script is:inline>
-  function initFooterParallax() {
-    const footer = document.getElementById('kontak');
-    const bgImage = document.getElementById('cta-parallax-image');
-    const backToTopBtn = document.getElementById('footer-back-to-top');
-    if (!footer || !bgImage) return;
+<!-- Optimized Translate-Y Parallax Engine & Back to Top Script -->
+<script>
+  import { initFooterParallax } from '../scripts/sectionParallax';
 
-    let isTicking = false;
-    let isIntersecting = false;
-
-    // 1. PURE TRANSLATE-Y PARALLAX ENGINE (Throttled via requestAnimationFrame)
-    function updateParallax() {
-      const rect = footer.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Parallax starts as soon as footer enters viewport (rect.top <= windowHeight)
-      if (rect.top <= windowHeight && rect.bottom >= 0) {
-        const totalTravel = rect.height + windowHeight;
-        const enterProgress = Math.max(0, Math.min(1, (windowHeight - rect.top) / totalTravel));
-
-        // Smooth vertical Translate-Y (drifts from -80px to +80px across 160px range without zoom)
-        const parallaxY = (enterProgress * 160 - 80).toFixed(1);
-        bgImage.style.transform = `translate3d(0, ${parallaxY}px, 0)`;
-      }
-      isTicking = false;
-    }
-
-    function onScroll() {
-      if (!isTicking && isIntersecting) {
-        requestAnimationFrame(updateParallax);
-        isTicking = true;
-      }
-    }
-
-    // IntersectionObserver: Only listen to parallax when footer is in/near viewport
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        isIntersecting = entry.isIntersecting;
-        if (isIntersecting) {
-          updateParallax();
-        }
-      });
-    }, {
-      root: null,
-      threshold: 0,
-      rootMargin: "300px 0px"
-    });
-
-    observer.observe(footer);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Debounced Resize Observer
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        updateParallax();
-      }, 150);
-    }, { passive: true });
-
-    // 2. BACK TO TOP SMOOTH SCROLL (Mobile)
-    if (backToTopBtn) {
-      backToTopBtn.addEventListener('click', () => {
-        // @ts-ignore
-        const lenis = window.__lenis;
-        if (lenis) {
-          lenis.scrollTo(0, { duration: 1.5 });
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFooterParallax);
-  } else {
-    initFooterParallax();
-  }
+  initFooterParallax();
 </script>

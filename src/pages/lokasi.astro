@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Masterplan2DMap from '../components/Masterplan2DMap.astro';
 import FooterCTA from '../components/FooterCTA.astro';
+import { buildBreadcrumbSchema, getSiteBase } from '../lib/seo';
 
 const routeStackItems = [
   {
@@ -38,15 +39,11 @@ const routeStackItems = [
     pills: ["JEMBATAN UTAMA", "SEKTOR TIMUR (GLAMPING & RESTO)", "SEKTOR BARAT (TENDA 01–100)"]
   }
 ];
-const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Beranda", "item": `${siteBase}/` },
-    { "@type": "ListItem", "position": 2, "name": "Lokasi & Denah 2D", "item": `${siteBase}/lokasi/` }
-  ]
-};
+const siteBase = getSiteBase(Astro.site);
+const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
+  { name: "Beranda", path: "/" },
+  { name: "Lokasi & Denah 2D", path: "/lokasi/" }
+]);
 ---
 
 <Layout
@@ -282,57 +279,10 @@ const breadcrumbSchema = {
 </style>
 
 <script>
-  function initLokasiStack() {
-    const wrappers = document.querySelectorAll<HTMLElement>('.lokasi-stack-wrapper');
-    if (wrappers.length === 0) return;
+  import { initCardStack } from '../scripts/cardStack';
 
-    function onScrollStack() {
-      wrappers.forEach((wrapper, idx) => {
-        if (idx === wrappers.length - 1) return;
-
-        const nextWrapper = wrappers[idx + 1];
-        if (!nextWrapper) return;
-
-        const nextRect = nextWrapper.getBoundingClientRect();
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const cardInner = wrapper.querySelector<HTMLElement>('.lokasi-stack-card');
-        if (!cardInner) return;
-
-        if (nextRect.top <= wrapperRect.bottom) {
-          const overlap = wrapperRect.bottom - nextRect.top;
-          const maxOverlap = wrapperRect.height;
-          const progress = Math.max(0, Math.min(1, overlap / (maxOverlap * 0.75)));
-
-          const scale = 1 - progress * 0.035;
-          const brightness = 1 - progress * 0.12;
-
-          cardInner.style.transform = `scale(${scale.toFixed(4)})`;
-          cardInner.style.filter = `brightness(${brightness.toFixed(3)})`;
-        } else {
-          cardInner.style.transform = 'scale(1)';
-          cardInner.style.filter = 'brightness(1)';
-        }
-      });
-    }
-
-    let isTicking = false;
-    function handleScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(() => {
-          onScrollStack();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    onScrollStack();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLokasiStack);
-  } else {
-    initLokasiStack();
-  }
+  initCardStack({
+    wrapperSelector: '.lokasi-stack-wrapper',
+    innerSelector: '.lokasi-stack-card',
+  });
 </script>

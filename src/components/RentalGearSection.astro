@@ -258,75 +258,9 @@ const defaultWaText = "Halo Admin Jolotundo, saya ingin menyewa peralatan campin
   </div>
 </section>
 
-<!-- ========================================================================= -->
-<!-- PARALLAX TRANSLATE-Y CONTROLLER SCRIPT (GPU-Accelerated Smooth Parallax) -->
-<!-- ========================================================================= -->
-<script is:inline>
-  function initRentalGearParallax() {
-    const section = document.getElementById('rental-gear');
-    const parallaxLayer = document.getElementById('rental-gear-parallax');
-    if (!section || !parallaxLayer) return;
+<script>
+  import { initRentalGearParallax } from '../scripts/sectionParallax';
 
-    let isTicking = false;
-    let isIntersecting = false;
-
-    function updateParallax() {
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Calculate when section enters or moves through viewport
-      if (rect.bottom >= -100 && rect.top <= windowHeight + 100) {
-        const sectionCenter = rect.top + rect.height * 0.45;
-        const viewportCenter = windowHeight * 0.5;
-        const diff = sectionCenter - viewportCenter;
-        
-        // Translate-Y smooth calculation: gentle counter-movement (-70px to +70px)
-        const clampedY = Math.max(-70, Math.min(70, -diff * 0.12));
-        parallaxLayer.style.transform = `translate3d(0, ${clampedY.toFixed(1)}px, 0)`;
-      }
-    }
-
-    function handleScroll() {
-      if (!isTicking && isIntersecting) {
-        requestAnimationFrame(() => {
-          updateParallax();
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        isIntersecting = entry.isIntersecting;
-        if (isIntersecting) {
-          updateParallax();
-        }
-      });
-    }, {
-      root: null,
-      threshold: 0,
-      rootMargin: "250px 0px"
-    });
-
-    observer.observe(section);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(updateParallax, 100);
-    }, { passive: true });
-
-    // Initial calculation on load
-    updateParallax();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRentalGearParallax);
-  } else {
-    initRentalGearParallax();
-  }
+  initRentalGearParallax();
 </script>
 
