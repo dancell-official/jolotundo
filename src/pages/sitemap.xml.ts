@@ -15,30 +15,30 @@ export const GET: APIRoute = ({ site }) => {
 
   const staticEntries: SitemapEntry[] = [
     { path: '/', priority: '1.0', changefreq: 'weekly' },
-    { path: '/akomodasi', priority: '0.9', changefreq: 'weekly' },
-    { path: '/wahana', priority: '0.9', changefreq: 'weekly' },
-    { path: '/event', priority: '0.9', changefreq: 'weekly' },
-    { path: '/lokasi', priority: '0.8', changefreq: 'monthly' },
-    { path: '/tentang', priority: '0.7', changefreq: 'monthly' },
-    { path: '/kontak', priority: '0.9', changefreq: 'weekly' },
-    { path: '/fasilitas/river-breeze', priority: '0.8', changefreq: 'weekly' },
-    { path: '/fasilitas/jolotundo-cafe', priority: '0.8', changefreq: 'weekly' }
+    { path: '/akomodasi/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/wahana/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/event/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/lokasi/', priority: '0.8', changefreq: 'monthly' },
+    { path: '/tentang/', priority: '0.7', changefreq: 'monthly' },
+    { path: '/kontak/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/fasilitas/river-breeze/', priority: '0.8', changefreq: 'weekly' },
+    { path: '/fasilitas/jolotundo-cafe/', priority: '0.8', changefreq: 'weekly' }
   ];
 
   const accommodationEntries: SitemapEntry[] = accommodations.map((item) => ({
-    path: `/akomodasi/${item.id}`,
+    path: `/akomodasi/${item.id}/`,
     priority: '0.8',
     changefreq: 'weekly'
   }));
 
   const wahanaEntries: SitemapEntry[] = wahanaDetails.map((item) => ({
-    path: `/wahana/${item.id}`,
+    path: `/wahana/${item.id}/`,
     priority: '0.8',
     changefreq: 'weekly'
   }));
 
   const eventEntries: SitemapEntry[] = eventDetails.map((item) => ({
-    path: `/event/${item.id}`,
+    path: `/event/${item.id}/`,
     priority: '0.8',
     changefreq: 'weekly'
   }));

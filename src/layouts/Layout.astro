@@ -28,9 +28,14 @@ const {
 } = Astro.props;
 
 const siteBase = (Astro.site ? Astro.site.toString() : 'https://jolotundoglamping.com').replace(/\/$/, '');
+const normalizeCanonicalPath = (p: string) => {
+	if (!p || p === '/') return '/';
+	const withLeading = p.startsWith('/') ? p : `/${p}`;
+	return /\.[a-z0-9]+$/i.test(withLeading) ? withLeading : `${withLeading.replace(/\/+$/, '')}/`;
+};
 const rawPath = canonical
-	? (canonical.startsWith('http') ? canonical : `${siteBase}${canonical.startsWith('/') ? canonical : `/${canonical}`}`)
-	: `${siteBase}${Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/+$/, '')}`;
+	? (canonical.startsWith('http') ? canonical : `${siteBase}${normalizeCanonicalPath(canonical)}`)
+	: `${siteBase}${normalizeCanonicalPath(Astro.url.pathname)}`;
 const canonicalURL = rawPath;
 
 // Social crawlers (WhatsApp, IG, FB, X) reliably render JPEG/PNG; fallback to /og-image.jpg if an AVIF path is passed
