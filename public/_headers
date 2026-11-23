@@ -1,0 +1,27 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Robots-Tag: index, follow
+
+/akomodasi/pinus-camp-plus
+  ! X-Robots-Tag
+  X-Robots-Tag: noindex, nofollow
+
+/akomodasi/pinus-camp-plus/*
+  ! X-Robots-Tag
+  X-Robots-Tag: noindex, nofollow
+
+/404.html
+  ! X-Robots-Tag
+  X-Robots-Tag: noindex, nofollow
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/og-image.jpg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400

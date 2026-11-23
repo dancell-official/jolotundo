@@ -255,7 +255,7 @@ const breadcrumbSchema = {
             tabindex="0"
             role="button"
             aria-label={`Lihat detail ${act.name}`}
-            onclick={`window.location.href = '/wahana/${act.id}';`}
+            onclick={`window.location.href = '/wahana/${act.id}/';`}
           >
             
             <!-- Background Image with Butter-Smooth Scale on Hover/Active -->
@@ -311,7 +311,7 @@ const breadcrumbSchema = {
                     <!-- Clean Action Bar (Responsive Full-Width on Mobile, Compact on Desktop) -->
                     <div class="pt-3 border-t border-white/15 flex items-center justify-between gap-3">
                       <a
-                        href={`/wahana/${act.id}`}
+                        href={`/wahana/${act.id}/`}
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#f4efe6] hover:bg-white text-[#141110] font-mono-tag text-[11px] font-bold uppercase tracking-wider transition-all duration-200 border border-[#f4efe6] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] whitespace-nowrap"
                       >
                         <span>Lihat Detail</span>

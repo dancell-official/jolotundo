@@ -99,6 +99,40 @@ const breadcrumbSchema = {
     { "@type": "ListItem", "position": 2, "name": "Jolotundo Cafe", "item": `${siteBase}/fasilitas/jolotundo-cafe/` }
   ]
 };
+
+const cafeSchema = {
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "name": "Jolotundo Cafe",
+  "description": "Open-air coffee bar & kuliner hutan pinus di Jolotundo Glamping & Edupark, Bajulan, Nganjuk.",
+  "url": `${siteBase}/fasilitas/jolotundo-cafe/`,
+  "image": `${siteBase}/og-image.jpg`,
+  "telephone": `+${siteData.brand.whatsapp}`,
+  "servesCuisine": ["Indonesian", "Coffee", "Asian Snacks"],
+  "priceRange": "Rp 15.000 - Rp 75.000",
+  "hasMenu": `${siteBase}/docs/menu-jolotundo-cafe.pdf`,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Dusun Plakat, Desa Bajulan",
+    "addressLocality": "Kec. Loceret",
+    "addressRegion": "Kab. Nganjuk, Jawa Timur",
+    "postalCode": "64471",
+    "addressCountry": "ID"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -7.738389,
+    "longitude": 111.825667
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      "opens": "07:00",
+      "closes": "22:00"
+    }
+  ]
+};
 ---
 
 <Layout
@@ -106,7 +140,7 @@ const breadcrumbSchema = {
   description="Jolotundo Cafe di tengah hutan pinus Bajulan, Nganjuk. Nikmati racikan kopi & latte, hidangan hangat, bapao, snack & dessert."
   image="/og-image.jpg"
   keywords="jolotundo, jolotundo cafe, cafe hutan pinus nganjuk, kopi bajulan nganjuk, wisata kuliner jolotundo"
-  schema={breadcrumbSchema}
+  schema={[breadcrumbSchema, cafeSchema]}
 >
   <!-- Fullscreen Floating Pill Navigation -->
   <Navbar />
@@ -736,7 +770,7 @@ const breadcrumbSchema = {
           
           <!-- Switch to River Breeze Cafe & Resto -->
           <a 
-            href="/fasilitas/river-breeze" 
+            href="/fasilitas/river-breeze/" 
             class="group p-6 sm:p-8 bg-white border border-[#141110]/15 hover:border-[#8c6d37] transition-all flex flex-col justify-between"
           >
             <div>
@@ -759,7 +793,7 @@ const breadcrumbSchema = {
 
           <!-- Switch to Accommodations -->
           <a 
-            href="/akomodasi" 
+            href="/akomodasi/" 
             class="group p-6 sm:p-8 bg-white border border-[#141110]/15 hover:border-[#8c6d37] transition-all flex flex-col justify-between"
           >
             <div>

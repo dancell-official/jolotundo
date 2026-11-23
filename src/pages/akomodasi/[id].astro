@@ -57,17 +57,39 @@ const breadcrumbSchema = {
     { "@type": "ListItem", "position": 3, "name": camp.name, "item": `${siteBase}/akomodasi/${camp.id}/` }
   ]
 };
+
+const accommodationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": `${camp.name} — Jolotundo Glamping & Edupark`,
+  "description": seoDesc,
+  "image": `${siteBase}/og-image.jpg`,
+  "url": `${siteBase}/akomodasi/${camp.id}/`,
+  "brand": {
+    "@type": "Brand",
+    "name": "Jolotundo Glamping & Edupark"
+  },
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "IDR",
+    "lowPrice": camp.priceRawWeekday,
+    "highPrice": camp.priceRawWeekend,
+    "offerCount": camp.pricingTiers ? camp.pricingTiers.length : 2,
+    "availability": "https://schema.org/InStock",
+    "url": `${siteBase}/akomodasi/${camp.id}/`
+  }
+};
 ---
 
 <Layout 
   title={`${camp.name} — Jolotundo Glamping & Edupark`}
   description={seoDesc}
   image="/og-image.jpg"
-  canonical={`/akomodasi/${camp.id}`}
+  canonical={`/akomodasi/${camp.id}/`}
   noindex={isAliasRoute}
   preloadHero={heroImage}
   keywords={`jolotundo, ${camp.name.toLowerCase()}, glamping jolotundo, penginapan bajulan nganjuk, ${camp.tier.toLowerCase()}`}
-  schema={breadcrumbSchema}
+  schema={[breadcrumbSchema, accommodationSchema]}
 >
   <!-- Floating Expanding Capsule Navbar -->
   <Navbar />
@@ -534,7 +556,7 @@ const breadcrumbSchema = {
         
         <!-- Prev Camp -->
         <a 
-          href={`/akomodasi/${prevCamp.id}`}
+          href={`/akomodasi/${prevCamp.id}/`}
           class="group p-6 sm:p-8 bg-[#141110] text-[#f4efe6] border border-[#141110] flex flex-col justify-between min-h-[140px] hover:border-white/40 transition-colors"
         >
           <div class="flex items-center gap-2 text-xs font-mono-tag text-white/50 uppercase tracking-widest">
@@ -551,7 +573,7 @@ const breadcrumbSchema = {
 
         <!-- Next Camp -->
         <a 
-          href={`/akomodasi/${nextCamp.id}`}
+          href={`/akomodasi/${nextCamp.id}/`}
           class="group p-6 sm:p-8 bg-[#141110] text-[#f4efe6] border border-[#141110] flex flex-col justify-between min-h-[140px] hover:border-white/40 transition-colors text-right items-end"
         >
           <div class="flex items-center gap-2 text-xs font-mono-tag text-white/50 uppercase tracking-widest">
