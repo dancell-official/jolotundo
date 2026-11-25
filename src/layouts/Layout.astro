@@ -1,284 +1,336 @@
 ---
-import '../styles/global.css';
-import siteData from '../data/siteData.json';
+import "../styles/global.css";
+import siteData from "../data/siteData.json";
 import {
-	buildBaseSchemas,
-	getSiteBase,
-	normalizeCanonicalPath,
-	resolveSafeOgImageUrl,
-} from '../lib/seo';
+  buildBaseSchemas,
+  getSiteBase,
+  normalizeCanonicalPath,
+  resolveSafeOgImageUrl,
+} from "../lib/seo";
 
 interface Props {
-	title?: string;
-	description?: string;
-	image?: string;
-	canonical?: string;
-	type?: 'website' | 'article';
-	noindex?: boolean;
-	preloadHero?: string;
-	keywords?: string;
-	schema?: Record<string, any> | Array<Record<string, any>>;
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+  preloadHero?: string;
+  keywords?: string;
+  schema?: Record<string, any> | Array<Record<string, any>>;
 }
 
-const { 
-	title = "Jolotundo Glamping & Edupark — Wisata Gunung Wilis Nganjuk",
-	description = "Destinasi glamping & edupark di lereng Gunung Wilis, Nganjuk. Nikmati Deluxe & River Camp, Korean Glamping, ATV, Jeep, Mini Zoo & cafe.",
-	image = "/og-image.jpg",
-	canonical,
-	type = "website",
-	noindex = false,
-	preloadHero,
-	keywords = "jolotundo, jolotundo glamping, jolotundo edupark, glamping nganjuk, wisata bajulan nganjuk, camping gunung wilis, outbound nganjuk, river camp jolotundo, korean glamping jolotundo, river breeze cafe",
-	schema
+const {
+  title = "Jolotundo Glamping & Edupark — Wisata Gunung Wilis Nganjuk",
+  description = "Destinasi glamping & edupark di lereng Gunung Wilis, Nganjuk. Nikmati Deluxe & River Camp, Korean Glamping, ATV, Jeep, Mini Zoo & cafe.",
+  image = "/og-image.jpg",
+  canonical,
+  type = "website",
+  noindex = false,
+  preloadHero,
+  keywords = "jolotundo, jolotundo glamping, jolotundo edupark, glamping nganjuk, wisata bajulan nganjuk, camping gunung wilis, outbound nganjuk, river camp jolotundo, korean glamping jolotundo, river breeze cafe",
+  schema,
 } = Astro.props;
 
 const siteBase = getSiteBase(Astro.site);
 const canonicalURL = canonical
-	? (canonical.startsWith('http') ? canonical : `${siteBase}${normalizeCanonicalPath(canonical)}`)
-	: `${siteBase}${normalizeCanonicalPath(Astro.url.pathname)}`;
+  ? canonical.startsWith("http")
+    ? canonical
+    : `${siteBase}${normalizeCanonicalPath(canonical)}`
+  : `${siteBase}${normalizeCanonicalPath(Astro.url.pathname)}`;
 
-const { ogImageURL, isDefaultOgImage, ogImageType } = resolveSafeOgImageUrl(siteBase, image);
+const { ogImageURL, isDefaultOgImage, ogImageType } = resolveSafeOgImageUrl(
+  siteBase,
+  image,
+);
 
 // Global Schema.org Structured Data (Campground / TouristAttraction & WebSite)
 const baseSchemas = buildBaseSchemas(siteBase, siteData.brand);
-const extraSchemas = Array.isArray(schema) ? schema : (schema ? [schema] : []);
+const extraSchemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
 const allSchemas = [...baseSchemas, ...extraSchemas];
 ---
 
 <!doctype html>
 <html lang="id" class="overflow-x-clip">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="theme-color" content="#0b130e" />
-		<meta name="format-detection" content="telephone=no" />
+  <head>
+    <!-- Meta Pixel Code -->
+    <script is:inline>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+      fbq("init", "1168666676121213");
+      fbq("track", "PageView");
+    </script>
+    <!-- End Meta Pixel Code -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0b130e" />
+    <meta name="format-detection" content="telephone=no" />
 
-		<!-- Primary SEO Meta Tags -->
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<meta name="keywords" content={keywords} />
-		<meta name="author" content="Jolotundo Glamping & Edupark (Dan Group)" />
-		<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"} />
-		<link rel="canonical" href={canonicalURL} />
-		<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <!-- Primary SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Jolotundo Glamping & Edupark (Dan Group)" />
+    <meta
+      name="robots"
+      content={
+        noindex
+          ? "noindex, nofollow"
+          : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      }
+    />
+    <link rel="canonical" href={canonicalURL} />
+    <link
+      rel="sitemap"
+      type="application/xml"
+      title="Sitemap"
+      href="/sitemap.xml"
+    />
 
-		<!-- Local SEO / Geo Meta Tags (Bajulan, Nganjuk, Jawa Timur) -->
-		<meta name="geo.region" content="ID-JI" />
-		<meta name="geo.placename" content="Bajulan, Loceret, Nganjuk, Jawa Timur" />
-		<meta name="geo.position" content="-7.738389;111.825667" />
-		<meta name="ICBM" content="-7.738389, 111.825667" />
+    <!-- Local SEO / Geo Meta Tags (Bajulan, Nganjuk, Jawa Timur) -->
+    <meta name="geo.region" content="ID-JI" />
+    <meta
+      name="geo.placename"
+      content="Bajulan, Loceret, Nganjuk, Jawa Timur"
+    />
+    <meta name="geo.position" content="-7.738389;111.825667" />
+    <meta name="ICBM" content="-7.738389, 111.825667" />
 
-		<!-- Favicons & Web App Manifest -->
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" sizes="any" />
-		<link rel="apple-touch-icon" href="/favicon.svg" />
-		<link rel="manifest" href="/site.webmanifest" />
+    <!-- Favicons & Web App Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
 
-		<!-- Open Graph / Facebook / WhatsApp -->
-		<meta property="og:type" content={type} />
-		<meta property="og:locale" content="id_ID" />
-		<meta property="og:site_name" content="Jolotundo Glamping & Edupark" />
-		<meta property="og:url" content={canonicalURL} />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:image" content={ogImageURL} />
-		<meta property="og:image:secure_url" content={ogImageURL} />
-		<meta property="og:image:type" content={ogImageType} />
-		{isDefaultOgImage && (
-			<>
-				<meta property="og:image:width" content="2400" />
-				<meta property="og:image:height" content="1260" />
-			</>
-		)}
-		<meta property="og:image:alt" content={title} />
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content="Jolotundo Glamping & Edupark" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:secure_url" content={ogImageURL} />
+    <meta property="og:image:type" content={ogImageType} />
+    {isDefaultOgImage && (
+      <>
+        <meta property="og:image:width" content="2400" />
+        <meta property="og:image:height" content="1260" />
+      </>
+    )}
+    <meta property="og:image:alt" content={title} />
 
-		<!-- Twitter Card -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:url" content={canonicalURL} />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content={ogImageURL} />
-		<meta name="twitter:image:alt" content={title} />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+    <meta name="twitter:image:alt" content={title} />
 
-		<!-- Conditional Preload Hero LCP Image -->
-		{preloadHero && (
-			<link rel="preload" as="image" href={preloadHero} fetchpriority="high" />
-		)}
+    <!-- Conditional Preload Hero LCP Image -->
+    {preloadHero && (
+      <link rel="preload" as="image" href={preloadHero} fetchpriority="high" />
+    )}
 
-		<!-- JSON-LD Structured Data (Schema.org) -->
-		{allSchemas.map((item) => (
-			<script type="application/ld+json" set:html={JSON.stringify(item)} />
-		))}
+    <!-- JSON-LD Structured Data (Schema.org) -->
+    {allSchemas.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
 
-		<!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono (GoUncharted Editorial Typography) -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono (GoUncharted Editorial Typography) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-[#0b130e] text-[#f3ede2] antialiased selection:bg-emerald-500 selection:text-white font-sans overflow-x-clip">
+    <!-- Meta Pixel Code (noscript) -->
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display:none"
+        src="https://www.facebook.com/tr?id=1168666676121213&ev=PageView&noscript=1"
+        alt=""
+      />
+    </noscript>
+    <!-- End Meta Pixel Code (noscript) -->
 
-		<!-- Meta Pixel Code -->
-		<script is:inline>
-			!function(f,b,e,v,n,t,s)
-			{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-			n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-			if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-			n.queue=[];t=b.createElement(e);t.async=!0;
-			t.src=v;s=b.getElementsByTagName(e)[0];
-			s.parentNode.insertBefore(t,s)}(window, document,'script',
-			'https://connect.facebook.net/en_US/fbevents.js');
-			fbq('init', '1168666676121213');
-			fbq('track', 'PageView');
-		</script>
-		<!-- End Meta Pixel Code -->
-	</head>
-	<body class="bg-[#0b130e] text-[#f3ede2] antialiased selection:bg-emerald-500 selection:text-white font-sans overflow-x-clip">
-		<!-- Meta Pixel Code (noscript) -->
-		<noscript>
-			<img height="1" width="1" style="display:none"
-				src="https://www.facebook.com/tr?id=1168666676121213&ev=PageView&noscript=1"
-				alt=""
-			/>
-		</noscript>
-		<!-- End Meta Pixel Code (noscript) -->
+    <!-- Hairline Global Editorial Scroll Progress Indicator (GoUncharted Luxury Minimalist) -->
+    <div
+      id="global-scroll-progress"
+      class="fixed top-0 left-0 right-0 h-[2px] bg-[#d8c39e] z-[100] origin-left scale-x-0 will-change-transform pointer-events-none transition-transform duration-75 shadow-[0_0_10px_rgba(216,195,158,0.5)]"
+    ></div>
 
-		<!-- Hairline Global Editorial Scroll Progress Indicator (GoUncharted Luxury Minimalist) -->
-		<div 
-			id="global-scroll-progress" 
-			class="fixed top-0 left-0 right-0 h-[2px] bg-[#d8c39e] z-[100] origin-left scale-x-0 will-change-transform pointer-events-none transition-transform duration-75 shadow-[0_0_10px_rgba(216,195,158,0.5)]"
-		></div>
+    <slot />
+    {/* Floating WhatsApp de-activated per user request */}
 
-		<slot />
-		{/* Floating WhatsApp de-activated per user request */}
+    <!-- Lenis Ultra-Smooth Scroll Engine -->
+    <script>
+      import Lenis from "lenis";
+      import "lenis/dist/lenis.css";
 
-		<!-- Lenis Ultra-Smooth Scroll Engine -->
-		<script>
-			import Lenis from 'lenis';
-			import 'lenis/dist/lenis.css';
+      // Konfigurasi "Butter Smooth" (Responsive yet floaty luxury glide ala Awwwards)
+      const lenis = new Lenis({
+        lerp: 0.075,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1.0,
+        infinite: false,
+      });
 
-			// Konfigurasi "Butter Smooth" (Responsive yet floaty luxury glide ala Awwwards)
-			const lenis = new Lenis({
-				lerp: 0.075,
-				wheelMultiplier: 0.9,
-				touchMultiplier: 1.0,
-				infinite: false,
-			});
+      // Simpan ke window agar sinkron frame-by-frame dengan animasi parallax
+      // @ts-ignore
+      window.__lenis = lenis;
 
-			// Simpan ke window agar sinkron frame-by-frame dengan animasi parallax
-			// @ts-ignore
-			window.__lenis = lenis;
+      const progressBar = document.getElementById("global-scroll-progress");
 
-			const progressBar = document.getElementById('global-scroll-progress');
+      // Sinkronkan hairline progress bar dengan Lenis scroll
+      lenis.on("scroll", (e: any) => {
+        if (progressBar && typeof e.progress === "number") {
+          progressBar.style.transform = `scaleX(${e.progress})`;
+        }
+      });
 
-			// Sinkronkan hairline progress bar dengan Lenis scroll
-			lenis.on('scroll', (e: any) => {
-				if (progressBar && typeof e.progress === 'number') {
-					progressBar.style.transform = `scaleX(${e.progress})`;
-				}
-			});
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
 
-			function raf(time: number) {
-				lenis.raf(time);
-				requestAnimationFrame(raf);
-			}
-			requestAnimationFrame(raf);
+      // Fallback scroll tracker jika lenis mati/paused
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!progressBar) return;
+          const maxScroll =
+            document.documentElement.scrollHeight - window.innerHeight;
+          if (maxScroll > 0) {
+            const progress = Math.min(
+              1,
+              Math.max(0, window.scrollY / maxScroll),
+            );
+            progressBar.style.transform = `scaleX(${progress})`;
+          }
+        },
+        { passive: true },
+      );
 
-			// Fallback scroll tracker jika lenis mati/paused
-			window.addEventListener('scroll', () => {
-				if (!progressBar) return;
-				const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-				if (maxScroll > 0) {
-					const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-					progressBar.style.transform = `scaleX(${progress})`;
-				}
-			}, { passive: true });
-
-			// Handle klik tombol anchor (#akomodasi, dll) agar meluncur sangat mulus
-			document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
-				anchor.addEventListener('click', (e) => {
-					const href = anchor.getAttribute('href');
-					if (href && href !== '#') {
-						e.preventDefault();
-						lenis.scrollTo(href, { offset: -20, duration: 1.8 });
-					}
-				});
-			});
-		</script>
-	</body>
+      // Handle klik tombol anchor (#akomodasi, dll) agar meluncur sangat mulus
+      document
+        .querySelectorAll<HTMLAnchorElement>('a[href^="#"]')
+        .forEach((anchor) => {
+          anchor.addEventListener("click", (e) => {
+            const href = anchor.getAttribute("href");
+            if (href && href !== "#") {
+              e.preventDefault();
+              lenis.scrollTo(href, { offset: -20, duration: 1.8 });
+            }
+          });
+        });
+    </script>
+  </body>
 </html>
 
 <style is:global>
-	:root {
-		--font-sans: 'Plus Jakarta Sans', sans-serif;
-		--font-mono: 'JetBrains Mono', monospace;
-	}
-	body {
-		font-family: var(--font-sans);
-	}
-	.font-mono-tag {
-		font-family: var(--font-mono);
-	}
+  :root {
+    --font-sans: "Plus Jakarta Sans", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+  }
+  body {
+    font-family: var(--font-sans);
+  }
+  .font-mono-tag {
+    font-family: var(--font-mono);
+  }
 
-	/* ========================================================================= */
-	/* CUSTOM LUXURY EDITORIAL SCROLLBAR: Obsidian & Gold Sand Theme (Zero Rounded) */
-	/* ========================================================================= */
-	/* Firefox */
-	html {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(216, 195, 158, 0.4) #0b130e;
-	}
+  /* ========================================================================= */
+  /* CUSTOM LUXURY EDITORIAL SCROLLBAR: Obsidian & Gold Sand Theme (Zero Rounded) */
+  /* ========================================================================= */
+  /* Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(216, 195, 158, 0.4) #0b130e;
+  }
 
-	/* Webkit: Chrome, Safari, Edge */
-	::-webkit-scrollbar {
-		width: 6px;
-		height: 6px;
-	}
+  /* Webkit: Chrome, Safari, Edge */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
 
-	::-webkit-scrollbar-track {
-		background: #0b130e;
-	}
+  ::-webkit-scrollbar-track {
+    background: #0b130e;
+  }
 
-	::-webkit-scrollbar-thumb {
-		background: rgba(216, 195, 158, 0.35);
-		border-radius: 0px;
-		transition: background 0.3s ease;
-	}
+  ::-webkit-scrollbar-thumb {
+    background: rgba(216, 195, 158, 0.35);
+    border-radius: 0px;
+    transition: background 0.3s ease;
+  }
 
-	::-webkit-scrollbar-thumb:hover {
-		background: #d8c39e;
-	}
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d8c39e;
+  }
 
-	::-webkit-scrollbar-thumb:active {
-		background: #f4efe6;
-	}
+  ::-webkit-scrollbar-thumb:active {
+    background: #f4efe6;
+  }
 
-	::-webkit-scrollbar-corner {
-		background: #0b130e;
-	}
+  ::-webkit-scrollbar-corner {
+    background: #0b130e;
+  }
 
-	/* Smooth Scrollbar for Inner Containers (e.g. Mobile Menu, Modals) */
-	* {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(216, 195, 158, 0.35) transparent;
-	}
+  /* Smooth Scrollbar for Inner Containers (e.g. Mobile Menu, Modals) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(216, 195, 158, 0.35) transparent;
+  }
 
-	/* Wajib untuk Lenis: matikan native scroll-behavior agar tidak bertabrakan */
-	html, body {
-		scroll-behavior: auto !important;
-	}
-	html.lenis, html.lenis body {
-		height: auto;
-	}
-	.lenis.lenis-smooth {
-		scroll-behavior: auto !important;
-	}
-	.lenis.lenis-smooth [data-lenis-prevent] {
-		overscroll-behavior: contain;
-	}
-	.lenis.lenis-stopped {
-		overflow: hidden;
-	}
-	.lenis.lenis-scrolling iframe,
-	.lenis.lenis-smooth iframe {
-		pointer-events: none;
-	}
+  /* Wajib untuk Lenis: matikan native scroll-behavior agar tidak bertabrakan */
+  html,
+  body {
+    scroll-behavior: auto !important;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-scrolling iframe,
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
 </style>
