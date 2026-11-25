@@ -86,7 +86,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
         
         <!-- Subtle Monospaced Eyebrow Kicker -->
         <span class="text-[10px] sm:text-xs font-mono-tag tracking-[0.2em] sm:tracking-[0.28em] text-[#d8c39e] uppercase mb-3 sm:mb-5 block">
-          — {activity.tier || "WAHANA REKREASI"} · {activity.elevation || "±800 MDPL"}
+          — {activity.tier || "WAHANA REKREASI"} · {activity.elevation || "±650 MDPL"}
         </span>
 
         <!-- Clean, Powerful & Elegant Title -->
@@ -130,7 +130,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
           <div class="flex items-center gap-2 sm:gap-6 text-white/60 shrink-0">
             <span class="hidden sm:inline">SEKTOR {activity.index} // 06</span>
             <span class="hidden sm:inline">•</span>
-            <span>{activity.elevation || "±800 MDPL"}</span>
+            <span>{activity.elevation || "±650 MDPL"}</span>
             <span>•</span>
             <span class="text-[#d8c39e] font-bold">
               {activity.priceStarting.toLowerCase().includes('gratis') ? 'FREE ENTRY' : activity.priceStarting}

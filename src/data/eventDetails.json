@@ -5,7 +5,7 @@
     "name": "Outdoor Forest Wedding",
     "category": "Pernikahan Alam Terbuka",
     "setting": "Pine Canopy Lawn",
-    "elevation": "±800 MDPL",
+    "elevation": "±650 MDPL",
     "tagline": "Momen sakral mengikat janji suci di bawah kanopi pinus alami dengan hawa sejuk pegunungan dan bonus menginap eksklusif.",
     "heroImage": "/images/event/wedding/wedding11.avif",
     "priceStarting": "Rp 5.000.000",
@@ -58,7 +58,7 @@
       {
         "label": "AREA VENUE",
         "value": "Lapangan Rumput Pinus Asri",
-        "desc": "Area terbuka luas berlatar pohon pinus alami dengan udara segar 800 MDPL."
+        "desc": "Area terbuka luas berlatar pohon pinus alami dengan udara segar 650 MDPL."
       },
       {
         "label": "SARANA DAYA",
@@ -126,7 +126,7 @@
     "name": "Sewa Aula / Glasshouse Hall",
     "category": "Gedung Pertemuan & Rapat",
     "setting": "Glass Pavilion & Pines",
-    "elevation": "±800 MDPL",
+    "elevation": "±650 MDPL",
     "tagline": "Gedung serbaguna berdinding kaca elegan ber-AC dengan pemandangan 360° hutan pinus untuk rapat kerja, seminar, dan gathering.",
     "heroImage": "/images/event/hall/hall2.avif",
     "priceStarting": "Rp 300.000",
@@ -227,7 +227,7 @@
     "name": "Gathering & Outbound Meadow",
     "category": "Rekreasi Komunitas & Outbound",
     "setting": "Pinus Meadow Lawn",
-    "elevation": "±800 MDPL",
+    "elevation": "±650 MDPL",
     "tagline": "Sarana kegiatan kebersamaan dan dinamika kelompok di lapangan rumput asri dengan dukungan trainer profesional dan live music.",
     "heroImage": "/images/event/gathering/gathering2.avif",
     "priceStarting": "Rp 100.000",
@@ -303,7 +303,7 @@
           "title": "Sewa Lapangan Rumput Pinus",
           "tag": "TARIF: RP 100.000 / JAM",
           "desc": "Sewa area lapangan rumput asri di alam terbuka lereng Wilis. Leluasa untuk pergerakan kelompok hingga ratusan peserta di bawah naungan pohon pinus.",
-          "pills": ["Min. 3 Jam Sewa", "Green Meadow Lawn", "Udara Sejuk 800 MDPL"]
+          "pills": ["Min. 3 Jam Sewa", "Green Meadow Lawn", "Udara Sejuk 650 MDPL"]
         },
         {
           "index": "02",

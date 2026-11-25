@@ -25,9 +25,9 @@ const waMessage = `Halo Admin Jolotundo Glamping & Culture, saya ingin konsultas
 const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
 
 const siteBase = getSiteBase(Astro.site);
-const rawEventDesc = `${venue.name} di Jolotundo Bajulan, Nganjuk. ${venue.category} sejuk 800 MDPL, mulai ${venue.priceStarting}. Reservasi sekarang.`;
+const rawEventDesc = `${venue.name} di Jolotundo Bajulan, Nganjuk. ${venue.category} sejuk 650 MDPL, mulai ${venue.priceStarting}. Reservasi sekarang.`;
 const seoDesc = rawEventDesc.length > 155
-  ? `${venue.name} di Jolotundo Bajulan, Nganjuk. Venue sejuk 800 MDPL, mulai ${venue.priceStarting}.`
+  ? `${venue.name} di Jolotundo Bajulan, Nganjuk. Venue sejuk 650 MDPL, mulai ${venue.priceStarting}.`
   : rawEventDesc;
 const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
   { name: "Beranda", path: "/" },
@@ -126,7 +126,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(siteBase, [
           <div class="flex items-center gap-2 sm:gap-6 text-white/60 shrink-0">
             <span class="hidden sm:inline">{venue.setting}</span>
             <span class="hidden sm:inline">•</span>
-            <span>BAJULAN · 800M</span>
+            <span>BAJULAN · 650M</span>
             <span>•</span>
             <span class="text-[#d8c39e] font-bold">{venue.priceStarting}</span>
           </div>

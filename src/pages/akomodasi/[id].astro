@@ -40,7 +40,7 @@ const isKorean = camp.id === 'korean-glamping';
 
 // Determine best background image for the hero
 const heroImage = camp.editorialImage || camp.image;
-const pills = camp.pills || [camp.setting, camp.elevation || "±800 MDPL", camp.tier, `Kapasitas ${camp.capacity}`];
+const pills = camp.pills || [camp.setting, camp.elevation || "±650 MDPL", camp.tier, `Kapasitas ${camp.capacity}`];
 
 // SEO: Canonical, Breadcrumb Schema & concise 120-155 char description
 const isAliasRoute = Astro.params.id === 'pinus-camp-plus';
@@ -108,7 +108,7 @@ const accommodationSchema = buildAccommodationSchema(siteBase, camp, seoDesc);
         
         <!-- Small Centered Eyebrow Kicker (DENMARK style) -->
         <span class="text-xs sm:text-sm md:text-base font-mono-tag tracking-[0.3em] sm:tracking-[0.4em] text-[#d8c39e] uppercase mb-4 sm:mb-6 drop-shadow-md">
-          {camp.setting || "BAJULAN // ±800 MDPL"}
+          {camp.setting || "BAJULAN // ±650 MDPL"}
         </span>
 
         <!-- Giant Bold Display Headline (FAROE ISLANDS style) -->
@@ -153,7 +153,7 @@ const accommodationSchema = buildAccommodationSchema(siteBase, camp, seoDesc);
 
             <div class="hidden md:flex items-center gap-2.5">
               <span class="text-white/50 uppercase tracking-widest text-[10px] sm:text-xs">ELEVASI</span>
-              <span class="text-white font-bold tracking-wider">{camp.elevation || "±800 MDPL"}</span>
+              <span class="text-white font-bold tracking-wider">{camp.elevation || "±650 MDPL"}</span>
             </div>
 
             <div class="hidden lg:flex items-center gap-2.5">
@@ -202,7 +202,7 @@ const accommodationSchema = buildAccommodationSchema(siteBase, camp, seoDesc);
           </blockquote>
 
           <p class="text-sm sm:text-base text-[#141110]/80 font-sans leading-relaxed font-light">
-            Dikelilingi oleh ribuan pohon pinus purba di lereng Gunung Wilis pada ketinggian {camp.elevation || "±800 MDPL"}, {camp.name} dirancang untuk memberikan ketenangan batin yang mendalam. Udara sejuk pegunungan, semilir angin pinus, serta alunan aliran air alami menciptakan suasana menginap yang eksklusif dan autentik.
+            Dikelilingi oleh ribuan pohon pinus purba di lereng Gunung Wilis pada ketinggian {camp.elevation || "±650 MDPL"}, {camp.name} dirancang untuk memberikan ketenangan batin yang mendalam. Udara sejuk pegunungan, semilir angin pinus, serta alunan aliran air alami menciptakan suasana menginap yang eksklusif dan autentik.
           </p>
 
           <!-- 4 Key Specifications Grid -->
